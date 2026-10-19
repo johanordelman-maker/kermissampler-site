@@ -1,0 +1,5 @@
+# Local review only — not needed on GitHub Pages
+preview/
+PUBLISH.md
+.DS_Store
+*.swp
