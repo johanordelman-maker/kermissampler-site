@@ -366,6 +366,40 @@ html[lang="en"] .lang-nl { display: none !important; }
   margin-top: 3rem;
   padding-top: 2rem;
 }
+.policy-main .lang-switch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+}
+.policy-main .lang-switch a {
+  color: var(--paper);
+  text-decoration: none;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+}
+.policy-main .lang-switch a:hover,
+.policy-main .lang-switch a[aria-current="page"] {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+.legal-hub {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+.legal-hub h1 { color: var(--gold); font-size: 1.5rem; }
+.legal-hub ul { padding-left: 1.2rem; line-height: 1.8; }
+.site-footer .links-legal {
+  display: grid;
+  gap: 0.35rem 1.25rem;
+  margin-top: 0.5rem;
+}
+@media (min-width: 640px) {
+  .site-footer .links-legal { grid-template-columns: repeat(2, 1fr); }
+}
 
 /* Footer */
 .site-footer {
