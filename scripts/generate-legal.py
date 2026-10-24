@@ -188,16 +188,20 @@ def privacy_sampler(lang: str, pkg: str) -> str:
       <li><strong>Deezer</strong> (webspeler) — <a href="https://www.deezer.com/legal/privacy">privacybeleid Deezer</a></li>
       <li><strong>SoundCloud</strong> (webspeler) — <a href="https://soundcloud.com/pages/privacy">privacybeleid SoundCloud</a></li>
       <li><strong>Hugging Face</strong> (eenmalig downloaden van het Splitsen-model) — <a href="https://huggingface.co/privacy">privacybeleid Hugging Face</a></li>
+      <li><strong>GitHub</strong> — bij <strong>Lijst van vandaag</strong> (Disco’s lijst) haalt de app een CSV op van <code>gist.githubusercontent.com</code>; dan maakt de app verbinding met GitHub — <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">privacybeleid GitHub</a></li>
     </ul>
-    <p>Optioneel kan een openbare “lijst van vandaag”-CSV van een GitHub Gist worden opgehaald; daarvoor geldt het beleid van <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub</a>.</p>
     <p><strong>Rechtsgrond:</strong> uw keuze om de functie te gebruiken (uitvoering van de dienst die u start) en, voor de microfoon, uw toestemming via het besturingssysteem.<br />
     <strong>Bewaartermijn:</strong> bij ons niet op servers; bij derden volgens hun privacybeleid.</p>
 
-    <h2>5. Rechten, klachten en contact</h2>
+    <h2>5. Multiplayer (WebRTC)</h2>
+    <p>Voor de multiplayerfunctie gebruikt de app <strong>WebRTC</strong>. Om verbindingen op te zetten raadpleegt de app STUN-servers van <strong>Google</strong> (<code>stun.l.google.com</code>) en <strong>Cloudflare</strong> (<code>stun.cloudflare.com</code>). Die diensten kunnen daarbij uw <strong>IP-adres</strong> zien. Zie het <a href="https://policies.google.com/privacy">privacybeleid van Google</a> en het <a href="https://www.cloudflare.com/privacypolicy/">privacybeleid van Cloudflare</a>.</p>
+    <p>De audio-/datasessie loopt verder <strong>rechtstreeks tussen de apparaten</strong> (peer-to-peer). Het andere apparaat in de sessie kan daardoor ook uw IP-adres zien, en u dat van de andere deelnemer. Wij ontvangen die sessie niet op een eigen server.</p>
+
+    <h2>6. Rechten, klachten en contact</h2>
     <p>Omdat wij geen persoonsgegevens op servers bewaren, kunnen wij gegevens die alleen op uw toestel staan niet inzien of wissen; dat regelt u door de app te verwijderen of de app-opslag te wissen. Voor aankoopgegevens bij Google of Apple gelden hun privacy-instrumenten.</p>
     <p>U heeft rechten onder de AVG (o.a. inzage, rectificatie, verwijdering, beperking, bezwaar, dataportabiliteit) voor zover wij gegevens verwerken. Neem contact op via {CONTACT}. U kunt ook een klacht indienen bij de <a href="https://www.autoriteitpersoonsgegevens.nl/">Autoriteit Persoonsgegevens</a>.</p>
 
-    <h2>6. Kinderen</h2>
+    <h2>7. Kinderen</h2>
     <p>De app is niet speciaal bedoeld voor kinderen. De app bevat geen advertenties en geen gepersonaliseerde advertenties.</p>
 """
     return f"""
@@ -235,16 +239,20 @@ def privacy_sampler(lang: str, pkg: str) -> str:
       <li><strong>Deezer</strong> (web player) — <a href="https://www.deezer.com/legal/privacy">Deezer privacy policy</a></li>
       <li><strong>SoundCloud</strong> (web player) — <a href="https://soundcloud.com/pages/privacy">SoundCloud privacy policy</a></li>
       <li><strong>Hugging Face</strong> (one-time download of the Splitsen model) — <a href="https://huggingface.co/privacy">Hugging Face privacy policy</a></li>
+      <li><strong>GitHub</strong> — <strong>List of today</strong> (Disco list) fetches a CSV from <code>gist.githubusercontent.com</code>; the app then connects to GitHub — <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub privacy statement</a></li>
     </ul>
-    <p>Optionally, a public “daily list” CSV may be fetched from a GitHub Gist; <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub’s privacy statement</a> applies.</p>
     <p><strong>Legal basis:</strong> your choice to use the feature (performance of the service you start) and, for the microphone, your consent via the operating system.<br />
     <strong>Retention:</strong> not on our servers; at third parties per their privacy policies.</p>
 
-    <h2>5. Your rights, complaints and contact</h2>
+    <h2>5. Multiplayer (WebRTC)</h2>
+    <p>The <strong>multiplayer</strong> feature uses <strong>WebRTC</strong>. To set up connections, the app uses STUN servers operated by <strong>Google</strong> (<code>stun.l.google.com</code>) and <strong>Cloudflare</strong> (<code>stun.cloudflare.com</code>). They may see your <strong>IP address</strong>. See <a href="https://policies.google.com/privacy">Google’s privacy policy</a> and <a href="https://www.cloudflare.com/privacypolicy/">Cloudflare’s privacy policy</a>.</p>
+    <p>The media session then runs <strong>directly between devices</strong> (peer-to-peer). The other device in the session can therefore see your IP address, and you theirs. We do not receive that session on our own servers.</p>
+
+    <h2>6. Your rights, complaints and contact</h2>
     <p>Because we do not keep personal data on servers, we cannot access or erase data that exists only on your device; delete the app or clear its storage to remove that. For purchase data held by Google or Apple, use their privacy tools.</p>
     <p>You have GDPR rights (access, rectification, erasure, restriction, objection, portability) where we process data. Contact {CONTACT}. You may lodge a complaint with the <a href="https://www.autoriteitpersoonsgegevens.nl/">Dutch Data Protection Authority (Autoriteit Persoonsgegevens)</a>.</p>
 
-    <h2>6. Children</h2>
+    <h2>7. Children</h2>
     <p>The app is not specifically aimed at children. The app contains no ads and no personalised advertising.</p>
 """
 
