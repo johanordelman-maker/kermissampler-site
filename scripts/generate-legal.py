@@ -10,16 +10,20 @@ APPS = {
         "title_nl": "Kermis Sampler",
         "title_en": "Kermis Sampler",
         "package": "nl.kermissampler.app",
+        # Support address of Kermis Sampler (Johan, 25-10-2026; catch-all forward).
+        "email": "kermissampler@ordelman.net",
     },
     "kermisbingo": {
         "title_nl": "Kermis Bingo",
         "title_en": "Kermis Bingo",
         "package": "nl.kermisbingo.app",
+        "email": "johanordelman@gmail.com",
     },
     "opdekermis": {
         "title_nl": "Op de Kermis!",
         "title_en": "Op de Kermis!",
         "package": "nl.kermissoftware.opdekermis",
+        "email": "johanordelman@gmail.com",
     },
 }
 
@@ -31,8 +35,6 @@ PUBLISHER_EN = (
     "<strong>Johan C. Ordelman jr. V.O.F.</strong> "
     "(trading as Kermis Software)"
 )
-EMAIL = "johanordelman@gmail.com"
-CONTACT = f'<a href="mailto:{EMAIL}">{EMAIL}</a>'
 KVK = "98595407"
 ADDRESS = "Terbregsehof 48, 3062 CP Rotterdam"
 DATE_NL = "25 oktober 2026"
@@ -50,6 +52,12 @@ def t(lang: str, nl: str, en: str) -> str:
     return nl if lang == "nl" else en
 
 
+def contact(app_key: str) -> str:
+    """Mail link with the support address of this app."""
+    email = APPS[app_key]["email"]
+    return f'<a href="mailto:{email}">{email}</a>'
+
+
 def app_name(app_key: str, lang: str) -> str:
     return APPS[app_key]["title_nl" if lang == "nl" else "title_en"]
 
@@ -63,22 +71,22 @@ def meta_line(app_key: str, lang: str) -> str:
 # --- Gedeelde blokken (audit 25-10-2026, teksten A-F) -----------------------
 
 
-def company_section(lang: str) -> str:
+def company_section(lang: str, app_key: str) -> str:
     """A: bedrijfsgegevens, op alle pagina's."""
     return t(
         lang,
         f"""
     <h2>Wie zijn wij</h2>
-    <p>Deze app is van {PUBLISHER_NL}, {ADDRESS}, Nederland. KvK-nummer {KVK}. Contact: {CONTACT}.</p>
+    <p>Deze app is van {PUBLISHER_NL}, {ADDRESS}, Nederland. KvK-nummer {KVK}. Contact: {contact(app_key)}.</p>
 """,
         f"""
     <h2>Who we are</h2>
-    <p>This app is provided by {PUBLISHER_EN}, {ADDRESS}, the Netherlands. Chamber of Commerce (KvK) number {KVK}. Contact: {CONTACT}.</p>
+    <p>This app is provided by {PUBLISHER_EN}, {ADDRESS}, the Netherlands. Chamber of Commerce (KvK) number {KVK}. Contact: {contact(app_key)}.</p>
 """,
     )
 
 
-def purchases_section(lang: str) -> str:
+def purchases_section(lang: str, app_key: str) -> str:
     """B: aankopen, terugbetaling en herroeping, in alle voorwaarden."""
     gp = '<a href="https://play.google.com/store/account">play.google.com/store/account</a>'
     ap = '<a href="https://reportaproblem.apple.com/">reportaproblem.apple.com</a>'
@@ -87,12 +95,12 @@ def purchases_section(lang: str) -> str:
         f"""
     <h2>Aankopen, terugbetaling en herroeping</h2>
     <p>Aankopen in de app lopen via Google Play of de Apple App Store. Betaling, facturering en terugbetaling regelen zij volgens hun eigen voorwaarden. Een terugbetaling vraag je aan via Google Play ({gp} → Bestelgeschiedenis) of via Apple ({ap}).</p>
-    <p>Digitale inhoud krijg je direct na de aankoop. Bij het kopen geef je uitdrukkelijk toestemming om meteen te leveren en verklaar je dat je daarmee afziet van het herroepingsrecht van 14 dagen (art. 6:230p BW). Je wettelijke rechten bij een gebrek blijven altijd gelden. Werkt een aankoop niet, mail ons dan via {CONTACT}; we helpen je.</p>
+    <p>Digitale inhoud krijg je direct na de aankoop. Bij het kopen geef je uitdrukkelijk toestemming om meteen te leveren en verklaar je dat je daarmee afziet van het herroepingsrecht van 14 dagen (art. 6:230p BW). Je wettelijke rechten bij een gebrek blijven altijd gelden. Werkt een aankoop niet, mail ons dan via {contact(app_key)}; we helpen je.</p>
 """,
         f"""
     <h2>Purchases, refunds and right of withdrawal</h2>
     <p>In-app purchases are processed by Google Play or the Apple App Store. They handle payment, invoicing and refunds under their own terms. To request a refund, use Google Play ({gp} → Order history) or Apple ({ap}).</p>
-    <p>Digital content is delivered immediately after purchase. When you buy, you expressly consent to immediate delivery and acknowledge that you thereby lose your 14-day right of withdrawal (Article 16(m) of Directive 2011/83/EU; Article 6:230p of the Dutch Civil Code). Your statutory rights in case of a defect always remain. If a purchase does not work, email us at {CONTACT} and we will help you.</p>
+    <p>Digital content is delivered immediately after purchase. When you buy, you expressly consent to immediate delivery and acknowledge that you thereby lose your 14-day right of withdrawal (Article 16(m) of Directive 2011/83/EU; Article 6:230p of the Dutch Civil Code). Your statutory rights in case of a defect always remain. If a purchase does not work, email us at {contact(app_key)} and we will help you.</p>
 """,
     )
 
@@ -112,6 +120,21 @@ def subscription_section(lang: str) -> str:
     )
 
 
+def rights_section(lang: str, app_key: str) -> str:
+    """Notice-and-takedown (Kermis Sampler, Johan 25-10-2026); same text as the app (licRights)."""
+    return t(
+        lang,
+        f"""    <h2>Rechten van anderen</h2>
+    <p>We hebben ons best gedaan om alle rechthebbenden te achterhalen. Alle merken en geluiden zijn eigendom van hun respectieve eigenaren. Vind je dat materiaal in deze app inbreuk maakt op jouw rechten? Mail dan naar {contact(app_key)} met uitleg en bewijs. We nemen zo snel mogelijk contact met je op en verwijderen het materiaal indien nodig.</p>
+
+""",
+        f"""    <h2>Rights of others</h2>
+    <p>We have done our best to trace all rights holders. All trademarks and sounds are the property of their respective owners. Do you believe material in this app infringes your rights? Email {contact(app_key)} with an explanation and proof. We will contact you as soon as possible and remove the material if necessary.</p>
+
+""",
+    )
+
+
 def coins_section(lang: str) -> str:
     """D: virtuele munten (Op de Kermis!)."""
     return t(
@@ -127,7 +150,7 @@ def coins_section(lang: str) -> str:
     )
 
 
-def delete_data_section(lang: str, with_ads: bool) -> str:
+def delete_data_section(lang: str, with_ads: bool, app_key: str) -> str:
     """E: gegevens verwijderen en je rechten (Bingo, Op de Kermis!; Sampler zonder advertentiedeel)."""
     if lang == "nl":
         ads = ""
@@ -141,7 +164,7 @@ def delete_data_section(lang: str, with_ads: bool) -> str:
     <ul>
       <li><strong>Alles op je toestel wissen:</strong> verwijder de app of wis de appgegevens. Wij bewaren geen gegevens op eigen servers, dus daarmee is alles weg.</li>{ads}
     </ul>
-    <p>Je hebt onder de AVG recht op inzage, rectificatie, verwijdering, beperking, bezwaar en overdraagbaarheid, voor zover wij gegevens van je verwerken. Mail daarvoor naar {CONTACT}; we reageren binnen 30 dagen. Je kunt ook een klacht indienen bij de {AP_LINK_NL}.</p>
+    <p>Je hebt onder de AVG recht op inzage, rectificatie, verwijdering, beperking, bezwaar en overdraagbaarheid, voor zover wij gegevens van je verwerken. Mail daarvoor naar {contact(app_key)}; we reageren binnen 30 dagen. Je kunt ook een klacht indienen bij de {AP_LINK_NL}.</p>
 """
     ads = ""
     if with_ads:
@@ -154,7 +177,7 @@ def delete_data_section(lang: str, with_ads: bool) -> str:
     <ul>
       <li><strong>Erase everything on your device:</strong> delete the app or clear its app data. We do not keep data on our own servers, so this removes everything.</li>{ads}
     </ul>
-    <p>Under the GDPR you have the right of access, rectification, erasure, restriction, objection and data portability, to the extent we process your data. Email {CONTACT}; we respond within 30 days. You can also lodge a complaint with the {AP_LINK_EN}.</p>
+    <p>Under the GDPR you have the right of access, rectification, erasure, restriction, objection and data portability, to the extent we process your data. Email {contact(app_key)}; we respond within 30 days. You can also lodge a complaint with the {AP_LINK_EN}.</p>
 """
 
 
@@ -276,7 +299,7 @@ def legal_header(depth: int, app_key: str, page_type: str, lang: str) -> str:
 """
 
 
-def legal_footer(depth: int, lang: str) -> str:
+def legal_footer(depth: int, lang: str, app_key: str) -> str:
     home = depth_path(depth, "index.html")
     footer_links = f"""
         <a href="../../../privacy/kermissampler/{lang}/">Kermis Sampler — privacy</a>
@@ -293,7 +316,7 @@ def legal_footer(depth: int, lang: str) -> str:
     <div class="inner">
       <div>
         <strong>Johan C. Ordelman jr. V.O.F.</strong> · Kermis Software · {ADDRESS} · Nederland / Netherlands · KvK {KVK}<br />
-        {CONTACT}
+        {contact(app_key)}
       </div>
       <div class="links links-legal">
         {footer_links}
@@ -350,7 +373,7 @@ def privacy_sampler(lang: str) -> str:
         body = f"""
     <h1>Privacyverklaring</h1>
     <p>Deze verklaring geldt voor de Android- en iOS-app <strong>Kermis Sampler</strong> ({APPS[key]['package']}), een soundboard voor thuisgebruik. Verwerkingsverantwoordelijke: {PUBLISHER_NL}.</p>
-{company_section(lang)}
+{company_section(lang, key)}
     <h2>Welke gegevens worden verwerkt?</h2>
     <p><strong>Wij verzamelen geen persoonsgegevens op eigen servers.</strong> Er is geen account. De app bevat <strong>geen advertenties</strong>, <strong>geen analytics</strong> en <strong>geen tracking-SDK</strong> (geen Firebase Analytics, crashrapportage of advertentietracking).</p>
     <p>De app bewaart gegevens <em>alleen op je toestel</em> (onder meer WebView-opslag / IndexedDB), bijvoorbeeld:</p>
@@ -381,7 +404,7 @@ def privacy_sampler(lang: str) -> str:
     <h2>Multiplayer (WebRTC)</h2>
     <p>Voor multiplayer gebruikt de app <strong>WebRTC</strong>. Om de verbinding op te zetten raadpleegt de app STUN-servers van <strong>Google</strong> (<code>stun.l.google.com</code>) en <strong>Cloudflare</strong> (<code>stun.cloudflare.com</code>); die zien daarbij je <strong>IP-adres</strong>. Zie het <a href="https://policies.google.com/privacy">privacybeleid van Google</a> en het <a href="https://www.cloudflare.com/privacypolicy/">privacybeleid van Cloudflare</a>.</p>
     <p>De audio-/datasessie loopt daarna <strong>rechtstreeks tussen de apparaten</strong> (peer-to-peer). Het andere apparaat ziet daardoor ook je IP-adres, en jij dat van de ander. Wij ontvangen die sessie niet op een eigen server.</p>
-{delete_data_section(lang, with_ads=False)}
+{delete_data_section(lang, with_ads=False, app_key=key)}
     <h2>Kinderen</h2>
     <p>De app is niet speciaal bedoeld voor kinderen en bevat geen advertenties.</p>
 """
@@ -389,7 +412,7 @@ def privacy_sampler(lang: str) -> str:
         body = f"""
     <h1>Privacy policy</h1>
     <p>This policy applies to the Android and iOS app <strong>Kermis Sampler</strong> ({APPS[key]['package']}), a soundboard for home use. Controller: {PUBLISHER_EN}.</p>
-{company_section(lang)}
+{company_section(lang, key)}
     <h2>What data is processed?</h2>
     <p><strong>We do not collect personal data on our own servers.</strong> There is no account. The app contains <strong>no ads</strong>, <strong>no analytics</strong> and <strong>no tracking SDK</strong> (no Firebase Analytics, crash reporting or ad tracking).</p>
     <p>The app stores data <em>only on your device</em> (including WebView storage / IndexedDB), for example:</p>
@@ -420,7 +443,7 @@ def privacy_sampler(lang: str) -> str:
     <h2>Multiplayer (WebRTC)</h2>
     <p>Multiplayer uses <strong>WebRTC</strong>. To set up the connection, the app contacts STUN servers operated by <strong>Google</strong> (<code>stun.l.google.com</code>) and <strong>Cloudflare</strong> (<code>stun.cloudflare.com</code>), which see your <strong>IP address</strong>. See <a href="https://policies.google.com/privacy">Google’s privacy policy</a> and <a href="https://www.cloudflare.com/privacypolicy/">Cloudflare’s privacy policy</a>.</p>
     <p>The audio/data session then runs <strong>directly between the devices</strong> (peer-to-peer), so the other device can see your IP address and you can see theirs. We do not receive that session on our own servers.</p>
-{delete_data_section(lang, with_ads=False)}
+{delete_data_section(lang, with_ads=False, app_key=key)}
     <h2>Children</h2>
     <p>The app is not specifically aimed at children and contains no ads.</p>
 """
@@ -433,10 +456,10 @@ def privacy_bingo(lang: str) -> str:
         body = f"""
     <h1>Privacyverklaring</h1>
     <p>Deze verklaring geldt voor <strong>Kermis Bingo</strong> ({APPS[key]['package']}) op Android en iOS. Verwerkingsverantwoordelijke: {PUBLISHER_NL}.</p>
-{company_section(lang)}
+{company_section(lang, key)}
     <h2>Geen account, spel lokaal</h2>
     <p>Er is geen account en de app vraagt niet om je naam of e-mailadres. Trekken, kaarten en instellingen werken offline. Wat je invoert (trekking, rondes, kaartreeks, weergave, stem, eventueel een logo) staat in lokale opslag op je toestel en gaat niet naar ons.</p>
-{store_purchase_section(key, lang)}{admob_section(lang)}{delete_data_section(lang, with_ads=True)}
+{store_purchase_section(key, lang)}{admob_section(lang)}{delete_data_section(lang, with_ads=True, app_key=key)}
     <h2>Kinderen</h2>
     <p>De app is niet speciaal bedoeld voor kinderen. Zonder je toestemming tonen we geen gepersonaliseerde advertenties.</p>
 """
@@ -444,10 +467,10 @@ def privacy_bingo(lang: str) -> str:
         body = f"""
     <h1>Privacy policy</h1>
     <p>This policy applies to <strong>Kermis Bingo</strong> ({APPS[key]['package']}) on Android and iOS. Controller: {PUBLISHER_EN}.</p>
-{company_section(lang)}
+{company_section(lang, key)}
     <h2>No account, local play</h2>
     <p>There is no account and the app does not ask for your name or email address. Drawing numbers, cards and settings work offline. What you enter (draw, rounds, card series, display, voice, optionally a logo) stays in local storage on your device and is not sent to us.</p>
-{store_purchase_section(key, lang)}{admob_section(lang)}{delete_data_section(lang, with_ads=True)}
+{store_purchase_section(key, lang)}{admob_section(lang)}{delete_data_section(lang, with_ads=True, app_key=key)}
     <h2>Children</h2>
     <p>The app is not specifically aimed at children. Without your consent we do not show personalised ads.</p>
 """
@@ -460,13 +483,13 @@ def privacy_opdekermis(lang: str) -> str:
         body = f"""
     <h1>Privacyverklaring</h1>
     <p>Deze verklaring geldt voor de kermisgame <strong>Op de Kermis!</strong> ({APPS[key]['package']}) op Android en iOS. Verwerkingsverantwoordelijke: {PUBLISHER_NL}.</p>
-{company_section(lang)}
+{company_section(lang, key)}
     <h2>Geen account, voortgang lokaal</h2>
     <p>Er is geen account. Spelvoortgang, munten en je verzameling staan <strong>alleen op je toestel</strong>; wij ontvangen die gegevens niet op een server.</p>
 {camera_section(lang)}{store_purchase_section(key, lang)}{admob_section(lang)}
     <h2>Link naar kermis.nu</h2>
     <p>De app heeft een knop die <strong>kermis.nu</strong> in je browser opent. Die website heeft een eigen privacybeleid; wij beheren die site niet en weten niet welke gegevens je daar achterlaat.</p>
-{delete_data_section(lang, with_ads=True)}
+{delete_data_section(lang, with_ads=True, app_key=key)}
     <h2>Leeftijd</h2>
     <p>Op de Kermis! is bedoeld voor spelers van 13 jaar en ouder en is niet op kinderen gericht. Zonder je toestemming tonen we geen gepersonaliseerde advertenties.</p>
 """
@@ -474,13 +497,13 @@ def privacy_opdekermis(lang: str) -> str:
         body = f"""
     <h1>Privacy policy</h1>
     <p>This policy applies to the fairground game <strong>Op de Kermis!</strong> ({APPS[key]['package']}) on Android and iOS. Controller: {PUBLISHER_EN}.</p>
-{company_section(lang)}
+{company_section(lang, key)}
     <h2>No account, progress stays local</h2>
     <p>There is no account. Game progress, coins and your collection are stored <strong>only on your device</strong>; we do not receive that data on a server.</p>
 {camera_section(lang)}{store_purchase_section(key, lang)}{admob_section(lang)}
     <h2>Link to kermis.nu</h2>
     <p>The app has a button that opens <strong>kermis.nu</strong> in your browser. That website has its own privacy policy; we do not operate it and do not know what data you leave there.</p>
-{delete_data_section(lang, with_ads=True)}
+{delete_data_section(lang, with_ads=True, app_key=key)}
     <h2>Age</h2>
     <p>Op de Kermis! is intended for players aged 13 and over and is not directed at children. Without your consent we do not show personalised ads.</p>
 """
@@ -545,10 +568,11 @@ def terms_body(app_key: str, lang: str) -> str:
     extra = ""
     if app_key == "opdekermis":
         extra += coins_section(lang)
-    extra += purchases_section(lang)
+    extra += purchases_section(lang, app_key)
     if app_key == "kermissampler":
         extra += subscription_section(lang)
-    return meta_line(app_key, lang) + intro + company_section(lang) + use + extra + tail
+        extra += rights_section(lang, app_key)
+    return meta_line(app_key, lang) + intro + company_section(lang, app_key) + use + extra + tail
 
 
 
@@ -645,7 +669,7 @@ def privacy_html_legacy() -> str:
     <div class="inner">
       <div>
         <strong>Johan C. Ordelman jr. V.O.F.</strong> · Kermis Software · {ADDRESS} · Nederland / Netherlands · KvK {KVK}<br />
-        {CONTACT}
+        {contact("kermissampler")}
       </div>
       <div class="links links-legal">
         <a href="privacy/kermissampler/nl/">Kermis Sampler — privacy</a>
@@ -692,7 +716,7 @@ def main() -> None:
                 html = (
                     legal_header(depth, app_key, page_type, lang)
                     + body_fn(app_key, lang)
-                    + legal_footer(depth, lang)
+                    + legal_footer(depth, lang, app_key)
                 )
                 out = ROOT / page_type / app_key / lang / "index.html"
                 write_page(out, html)
