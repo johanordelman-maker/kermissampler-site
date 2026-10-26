@@ -17,23 +17,26 @@ APPS = {
         "title_nl": "Kermis Bingo",
         "title_en": "Kermis Bingo",
         "package": "nl.kermisbingo.app",
-        "email": "johanordelman@gmail.com",
+        # Support address of Kermis Bingo (catch-all forward, 26-10-2026).
+        "email": "kermisbingo@ordelman.net",
     },
     "opdekermis": {
         "title_nl": "Op de Kermis!",
         "title_en": "Op de Kermis!",
         "package": "nl.kermissoftware.opdekermis",
-        "email": "johanordelman@gmail.com",
+        # Support address of Op de Kermis! (catch-all forward, 26-10-2026).
+        "email": "opdekermis@ordelman.net",
     },
 }
 
+# Maker name shown on the site is Kermis Software; the legal entity stays named.
 PUBLISHER_NL = (
-    "<strong>Johan C. Ordelman jr. V.O.F.</strong> "
-    "(handelend onder de naam Kermis Software)"
+    "<strong>Kermis Software</strong> "
+    "(handelsnaam van Johan C. Ordelman jr. V.O.F.)"
 )
 PUBLISHER_EN = (
-    "<strong>Johan C. Ordelman jr. V.O.F.</strong> "
-    "(trading as Kermis Software)"
+    "<strong>Kermis Software</strong> "
+    "(trade name of Johan C. Ordelman jr. V.O.F.)"
 )
 KVK = "98595407"
 ADDRESS = "Terbregsehof 48, 3062 CP Rotterdam"
@@ -307,9 +310,9 @@ def legal_footer(depth: int, lang: str, app_key: str) -> str:
         <a href="../../../privacy/opdekermis/{lang}/">Op de Kermis! — privacy</a>
 """
     if lang == "nl":
-        copy = "© 2026 Johan C. Ordelman jr. V.O.F. · Deze site gebruikt geen trackers of cookies."
+        copy = "© 2026 Kermis Software · Deze site gebruikt geen trackers of cookies."
     else:
-        copy = "© 2026 Johan C. Ordelman jr. V.O.F. · This site uses no trackers or cookies."
+        copy = "© 2026 Kermis Software · This site uses no trackers or cookies."
     return f"""
   </main>
   <footer class="site-footer">
@@ -678,8 +681,8 @@ def privacy_html_legacy() -> str:
         <a href="index.html">Home</a>
       </div>
       <p class="muted" style="margin:0;font-size:0.8rem">
-        <span class="lang-nl">© 2026 Johan C. Ordelman jr. V.O.F. · Deze site gebruikt geen trackers of cookies.</span>
-        <span class="lang-en">© 2026 Johan C. Ordelman jr. V.O.F. · This site uses no trackers or cookies.</span>
+        <span class="lang-nl">© 2026 Kermis Software · Deze site gebruikt geen trackers of cookies.</span>
+        <span class="lang-en">© 2026 Kermis Software · This site uses no trackers or cookies.</span>
       </p>
     </div>
   </footer>
