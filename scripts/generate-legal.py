@@ -123,6 +123,27 @@ def subscription_section(lang: str) -> str:
     )
 
 
+APPLE_STD_EULA = "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/"
+
+
+def eula_section(lang: str) -> str:
+    """Kermis Sampler: these terms are the EULA; Apple's standard EULA applies to App Store purchases (App Review 3.1.2, iOS build 58)."""
+    link = f'<a href="{APPLE_STD_EULA}">{APPLE_STD_EULA}</a>'
+    return t(
+        lang,
+        f"""
+    <h2>Licentieovereenkomst (EULA)</h2>
+    <p>Deze gebruiksvoorwaarden zijn de licentieovereenkomst voor eindgebruikers (End User License Agreement, EULA) van Kermis Sampler.</p>
+    <p>Koop je in de app via Apple (de eenmalige aankoop Volledige versie of het jaarabonnement Disco’s lijst), dan geldt daarnaast de standaard licentieovereenkomst van Apple: {link}</p>
+""",
+        f"""
+    <h2>Licence agreement (EULA)</h2>
+    <p>These terms of use are the end user licence agreement (EULA) of Kermis Sampler.</p>
+    <p>If you buy in the app through Apple (the one-time purchase Full version or the annual subscription Disco’s lijst), Apple’s standard licence agreement applies as well: {link}</p>
+""",
+    )
+
+
 def rights_section(lang: str, app_key: str) -> str:
     """Notice-and-takedown (Kermis Sampler, Johan 25-10-2026); same text as the app (licRights)."""
     return t(
@@ -568,6 +589,11 @@ def terms_body(app_key: str, lang: str) -> str:
     <h2>Governing law</h2>
     <p>These terms are governed by Dutch law. Disputes are submitted to the competent court in the Netherlands, without prejudice to your rights as a consumer.</p>
 """
+    if app_key == "kermissampler":
+        intro = intro.replace("<h1>Gebruiksvoorwaarden</h1>", "<h1>Gebruiksvoorwaarden (EULA)</h1>").replace(
+            "<h1>Terms of use</h1>", "<h1>Terms of Use (EULA)</h1>"
+        )
+        intro += eula_section(lang)
     extra = ""
     if app_key == "opdekermis":
         extra += coins_section(lang)
