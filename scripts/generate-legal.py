@@ -12,6 +12,9 @@ APPS = {
         "package": "nl.kermissampler.app",
         # Support address of Kermis Sampler (Johan, 25-10-2026; catch-all forward).
         "email": "kermissampler@ordelman.net",
+        # Last change of the Kermis Sampler pages (Kermis Gevarieerd, camera/foto's; 28-10-2026).
+        "date_nl": "28 oktober 2026",
+        "date_en": "28 October 2026",
     },
     "kermisbingo": {
         "title_nl": "Kermis Bingo",
@@ -67,7 +70,9 @@ def app_name(app_key: str, lang: str) -> str:
 
 def meta_line(app_key: str, lang: str) -> str:
     pkg = APPS[app_key]["package"]
-    updated = t(lang, f"Laatst bijgewerkt: {DATE_NL}", f"Last updated: {DATE_EN}")
+    date_nl = APPS[app_key].get("date_nl", DATE_NL)
+    date_en = APPS[app_key].get("date_en", DATE_EN)
+    updated = t(lang, f"Laatst bijgewerkt: {date_nl}", f"Last updated: {date_en}")
     return f'    <p class="meta">{app_name(app_key, lang)} · {pkg} · {updated}</p>\n'
 
 
@@ -109,16 +114,16 @@ def purchases_section(lang: str, app_key: str) -> str:
 
 
 def subscription_section(lang: str) -> str:
-    """C: jaarabonnement Disco's lijst (alleen Kermis Sampler)."""
+    """C: jaarabonnement Kermis Gevarieerd (alleen Kermis Sampler)."""
     return t(
         lang,
         """
-    <h2>Abonnement Disco’s lijst</h2>
-    <p>Disco’s lijst is een jaarabonnement dat automatisch verlengt, tenzij je het uiterlijk 24 uur voor het einde van de periode opzegt in Google Play of de App Store (Abonnementen). Na opzeggen blijft het actief tot het einde van de betaalde periode.</p>
+    <h2>Abonnement Kermis Gevarieerd</h2>
+    <p>Kermis Gevarieerd is een jaarabonnement dat automatisch verlengt, tenzij je het uiterlijk 24 uur voor het einde van de periode opzegt in Google Play of de App Store (Abonnementen). Na opzeggen blijft het actief tot het einde van de betaalde periode.</p>
 """,
         """
-    <h2>Disco’s lijst subscription</h2>
-    <p>Disco’s lijst is an annual subscription that renews automatically unless you cancel it at least 24 hours before the end of the current period in Google Play or the App Store (Subscriptions). After cancelling, it stays active until the end of the paid period.</p>
+    <h2>Kermis Gevarieerd subscription</h2>
+    <p>Kermis Gevarieerd is an annual subscription that renews automatically unless you cancel it at least 24 hours before the end of the current period in Google Play or the App Store (Subscriptions). After cancelling, it stays active until the end of the paid period.</p>
 """,
     )
 
@@ -134,12 +139,12 @@ def eula_section(lang: str) -> str:
         f"""
     <h2>Licentieovereenkomst (EULA)</h2>
     <p>Deze gebruiksvoorwaarden zijn de licentieovereenkomst voor eindgebruikers (End User License Agreement, EULA) van Kermis Sampler.</p>
-    <p>Koop je in de app via Apple (de eenmalige aankoop Volledige versie of het jaarabonnement Disco’s lijst), dan geldt daarnaast de standaard licentieovereenkomst van Apple: {link}</p>
+    <p>Koop je in de app via Apple (de eenmalige aankoop Volledige versie of het jaarabonnement Kermis Gevarieerd), dan geldt daarnaast de standaard licentieovereenkomst van Apple: {link}</p>
 """,
         f"""
     <h2>Licence agreement (EULA)</h2>
     <p>These terms of use are the end user licence agreement (EULA) of Kermis Sampler.</p>
-    <p>If you buy in the app through Apple (the one-time purchase Full version or the annual subscription Disco’s lijst), Apple’s standard licence agreement applies as well: {link}</p>
+    <p>If you buy in the app through Apple (the one-time purchase Full version or the annual subscription Kermis Gevarieerd), Apple’s standard licence agreement applies as well: {link}</p>
 """,
     )
 
@@ -409,9 +414,10 @@ def privacy_sampler(lang: str) -> str:
       <li>of de app na een store-aankoop is ontgrendeld.</li>
     </ul>
 {store_purchase_section(key, lang)}
-    <h2>Microfoon en bestanden</h2>
+    <h2>Microfoon, camera, foto’s en bestanden</h2>
     <p><strong>Microfoon</strong>: alleen als je de talk-over-functie gebruikt; het besturingssysteem vraagt dan toestemming. Audio wordt niet opgenomen of naar ons geüpload.</p>
     <p><strong>Bestanden</strong>: via de systeemkiezer als je MP3/WAV-bestanden of mappen kiest; alleen op het toestel.</p>
+    <p><strong>Camera en foto’s</strong>: alleen als je dat zelf kiest, namelijk als je een eigen plaatje voor een pad instelt (pad bewerken → Eigen plaatje). Je maakt dan zelf een foto met de camera, of je kiest een afbeelding uit je foto’s of je bestanden; het besturingssysteem vraagt daarvoor zo nodig eerst toestemming. Het plaatje wordt alleen op je toestel bij die pad bewaard. Er wordt niets verzonden of naar ons geüpload, en de app gebruikt de camera en je foto’s nergens anders voor.</p>
 
     <h2>Diensten van derden (internet)</h2>
     <p>Bij sommige functies maakt de app verbinding met diensten van derden. Zij kunnen daarbij onder meer je <strong>IP-adres</strong>, apparaat- en verbindingsgegevens en wat je zoekt of afspeelt verwerken volgens hun eigen beleid. Dat gebeurt alleen als je de functie start:</p>
@@ -421,9 +427,9 @@ def privacy_sampler(lang: str) -> str:
       <li><strong>Deezer</strong> (webspeler): <a href="https://www.deezer.com/legal/privacy">privacybeleid Deezer</a></li>
       <li><strong>SoundCloud</strong> (webspeler): <a href="https://soundcloud.com/pages/privacy">privacybeleid SoundCloud</a></li>
       <li><strong>Hugging Face</strong> (eenmalig downloaden van het Splitsen-model): <a href="https://huggingface.co/privacy">privacybeleid Hugging Face</a></li>
-      <li><strong>GitHub</strong>: bij <strong>Lijst van vandaag</strong> (Disco’s lijst) haalt de app een CSV op van <code>gist.githubusercontent.com</code>: <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">privacybeleid GitHub</a></li>
+      <li><strong>GitHub</strong>: bij <strong>Lijst van vandaag</strong> (Kermis Gevarieerd) haalt de app een CSV op van <code>gist.githubusercontent.com</code>: <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">privacybeleid GitHub</a></li>
     </ul>
-    <p><strong>Rechtsgrond:</strong> je keuze om de functie te gebruiken (uitvoering van de dienst die je start) en, voor de microfoon, je toestemming via het besturingssysteem. <strong>Bewaartermijn:</strong> bij ons niet op servers; bij derden volgens hun privacybeleid.</p>
+    <p><strong>Rechtsgrond:</strong> je keuze om de functie te gebruiken (uitvoering van de dienst die je start) en, voor de microfoon, de camera en je foto’s, je toestemming via het besturingssysteem. <strong>Bewaartermijn:</strong> bij ons niet op servers; bij derden volgens hun privacybeleid.</p>
 
     <h2>Multiplayer (WebRTC)</h2>
     <p>Voor multiplayer gebruikt de app <strong>WebRTC</strong>. Om de verbinding op te zetten raadpleegt de app STUN-servers van <strong>Google</strong> (<code>stun.l.google.com</code>) en <strong>Cloudflare</strong> (<code>stun.cloudflare.com</code>); die zien daarbij je <strong>IP-adres</strong>. Zie het <a href="https://policies.google.com/privacy">privacybeleid van Google</a> en het <a href="https://www.cloudflare.com/privacypolicy/">privacybeleid van Cloudflare</a>.</p>
@@ -448,9 +454,10 @@ def privacy_sampler(lang: str) -> str:
       <li>whether the app has been unlocked after a store purchase.</li>
     </ul>
 {store_purchase_section(key, lang)}
-    <h2>Microphone and files</h2>
+    <h2>Microphone, camera, photos and files</h2>
     <p><strong>Microphone</strong>: only when you use talk-over; the operating system asks for permission. Audio is not recorded or uploaded to us.</p>
     <p><strong>Files</strong>: via the system picker when you choose MP3/WAV files or folders; on the device only.</p>
+    <p><strong>Camera and photos</strong>: only when you choose to, namely when you set your own picture for a pad (edit pad → Own picture). You then take a photo with the camera yourself, or pick an image from your photos or your files; the operating system asks for permission first where needed. The picture is stored only on your device, with that pad. Nothing is sent or uploaded to us, and the app does not use the camera or your photos for anything else.</p>
 
     <h2>Third-party services (internet)</h2>
     <p>Some features connect to third-party services. They may process your <strong>IP address</strong>, device and connection data, and what you search for or play, under their own policies. This only happens when you start the feature:</p>
@@ -460,9 +467,9 @@ def privacy_sampler(lang: str) -> str:
       <li><strong>Deezer</strong> (web player): <a href="https://www.deezer.com/legal/privacy">Deezer privacy policy</a></li>
       <li><strong>SoundCloud</strong> (web player): <a href="https://soundcloud.com/pages/privacy">SoundCloud privacy policy</a></li>
       <li><strong>Hugging Face</strong> (one-time download of the Splitsen model): <a href="https://huggingface.co/privacy">Hugging Face privacy policy</a></li>
-      <li><strong>GitHub</strong>: <strong>Lijst van vandaag</strong> (Disco’s lijst) fetches a CSV from <code>gist.githubusercontent.com</code>: <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub privacy statement</a></li>
+      <li><strong>GitHub</strong>: <strong>Lijst van vandaag</strong> (Kermis Gevarieerd) fetches a CSV from <code>gist.githubusercontent.com</code>: <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub privacy statement</a></li>
     </ul>
-    <p><strong>Legal basis:</strong> your choice to use the feature (performance of the service you start) and, for the microphone, your consent via the operating system. <strong>Retention:</strong> not on our servers; at third parties under their privacy policies.</p>
+    <p><strong>Legal basis:</strong> your choice to use the feature (performance of the service you start) and, for the microphone, the camera and your photos, your consent via the operating system. <strong>Retention:</strong> not on our servers; at third parties under their privacy policies.</p>
 
     <h2>Multiplayer (WebRTC)</h2>
     <p>Multiplayer uses <strong>WebRTC</strong>. To set up the connection, the app contacts STUN servers operated by <strong>Google</strong> (<code>stun.l.google.com</code>) and <strong>Cloudflare</strong> (<code>stun.cloudflare.com</code>), which see your <strong>IP address</strong>. See <a href="https://policies.google.com/privacy">Google’s privacy policy</a> and <a href="https://www.cloudflare.com/privacypolicy/">Cloudflare’s privacy policy</a>.</p>
