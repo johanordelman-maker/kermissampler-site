@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#6B1523" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='16' fill='%236B1523'/%3E%3Ccircle cx='16' cy='17' r='8' fill='%23C9A227'/%3E%3C/svg%3E" />
+  <meta name="description" content="Spaarkaart van De Oliebollen Bakkerij in Veenendaal. Demo-ontwerp." />
+  <title>De Oliebollen Bakkerij — spaarkaart</title>
+  <style>
+    :root {
+      --bordeaux: #6B1523;
+      --bordeaux-donker: #4A0E18;
+      --goud: #C9A227;
+      --goud-licht: #E8D08A;
+      --creme: #F6E7C8;
+      --creme-kaart: #FFF8EA;
+      --tekst: #2C1610;
+      --tekst-zacht: #5C3A2C;
+      --lijn: #E2CDA3;
+      --ok: #2F6B3A;
+      --schaduw: 0 10px 24px rgba(74, 14, 24, .12);
+      --nav-h: 72px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; height: 100%; }
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: #1a0a0d;
+      color: var(--tekst);
+      -webkit-tap-highlight-color: transparent;
+    }
+    button, input, textarea { font: inherit; }
+    button { cursor: pointer; }
+    .app {
+      max-width: 430px;
+      margin: 0 auto;
+      min-height: 100%;
+      background:
+        radial-gradient(120% 60% at 50% -10%, #8a2232 0%, transparent 55%),
+        var(--creme);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    header.bord {
+      background: linear-gradient(180deg, #7d1b2b 0%, var(--bordeaux) 55%, var(--bordeaux-donker) 100%);
+      color: var(--creme);
+      padding: 0 16px 14px;
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(74, 14, 24, .25);
+    }
+    .lint {
+      height: 11px;
+      margin: 0 -16px 12px;
+      background: linear-gradient(180deg, #f4e4aa 0%, var(--goud) 46%, #8d6b14 100%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.45), 0 2px 0 rgba(0,0,0,.18);
+    }
+    .bord h1 {
+      font-family: Palatino, "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      font-size: 1.35rem;
+      letter-spacing: .04em;
+      margin: 0;
+      line-height: 1.15;
+      text-shadow: 0 1px 0 rgba(0,0,0,.25);
+    }
+    .bord h1 span { display: block; font-size: 1.55rem; color: var(--goud-licht); }
+    .slagzin {
+      margin: 6px 0 0;
+      font-style: italic;
+      color: var(--goud-licht);
+      font-size: .95rem;
+    }
+    .bollen-rij {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .mini-bol {
+      width: 22px; height: 22px; border-radius: 50%;
+      background: radial-gradient(circle at 32% 28%, #f6e0aa, #c47a28 48%, #7a3e10 82%);
+      box-shadow: inset -2px -2px 4px rgba(80,30,0,.3);
+      position: relative;
+    }
+    .mini-bol::after {
+      content: "";
+      position: absolute; inset: 3px 4px auto auto;
+      width: 4px; height: 4px; border-radius: 50%;
+      background: rgba(255,255,255,.75);
+    }
+    .demo-label {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(232,208,138,.5);
+      font-size: .7rem;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: var(--goud-licht);
+    }
+    .kraam-schakel {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 10px;
+      font-size: .92rem;
+    }
+    .switch {
+      position: relative;
+      width: 48px; height: 28px;
+      flex: 0 0 auto;
+    }
+    .switch input {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      opacity: 0;
+      cursor: pointer;
+      z-index: 2;
+    }
+    .slider {
+      position: absolute; inset: 0;
+      background: #3d1018;
+      border-radius: 999px;
+      border: 1px solid var(--goud);
+    }
+    .slider::before {
+      content: "";
+      position: absolute;
+      width: 22px; height: 22px;
+      left: 2px; top: 2px;
+      background: var(--creme);
+      border-radius: 50%;
+      transition: transform .2s;
+    }
+    .switch input:checked + .slider { background: var(--goud); }
+    .switch input:checked + .slider::before { transform: translateX(20px); background: var(--bordeaux-donker); }
+    .switch input:focus-visible + .slider { outline: 3px solid #fff; outline-offset: 2px; }
+
+    main {
+      flex: 1;
+      padding: 14px 16px calc(var(--nav-h) + 18px);
+      overflow: auto;
+    }
+    .scherm { display: none; }
+    .scherm.aan { display: block; }
+
+    .kaart {
+      background: var(--creme-kaart);
+      border: 1px solid var(--lijn);
+      border-radius: 18px;
+      padding: 16px;
+      box-shadow: var(--schaduw);
+    }
+    .kaart h2 {
+      font-family: Palatino, Georgia, serif;
+      margin: 0 0 6px;
+      font-size: 1.2rem;
+    }
+    .sub { margin: 0 0 14px; color: var(--tekst-zacht); font-size: .95rem; }
+    .gratis {
+      display: inline-block;
+      background: var(--bordeaux);
+      color: var(--creme);
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-weight: 700;
+      font-size: .85rem;
+      margin-bottom: 12px;
+    }
+    .rooster {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      margin: 8px 0 6px;
+    }
+    .bol {
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: #efe2c4;
+      border: 2px dashed #c4a574;
+      display: grid;
+      place-items: center;
+      color: #9a7148;
+      font-weight: 700;
+      font-size: .85rem;
+      position: relative;
+    }
+    .bol:nth-child(10) { box-shadow: 0 0 0 2px var(--goud); }
+    .bol.gevuld {
+      border: 0;
+      color: transparent;
+      background: radial-gradient(circle at 32% 28%, #f6e0aa, #c47a28 48%, #7a3e10 82%);
+      box-shadow: inset -4px -6px 8px rgba(80,30,0,.28), 0 4px 8px rgba(80,30,0,.18);
+    }
+    .bol.gevuld::after {
+      content: "";
+      position: absolute;
+      width: 7px; height: 7px; border-radius: 50%;
+      background: rgba(255,255,255,.8);
+      top: 22%; left: 28%;
+      box-shadow:
+        12px 6px 0 -1px rgba(255,255,255,.7),
+        4px 14px 0 -2px rgba(255,255,255,.65),
+        16px 16px 0 -2px rgba(255,255,255,.5);
+    }
+    .bol.pop { animation: pop .45s ease; }
+    @keyframes pop {
+      0% { transform: scale(.55); }
+      55% { transform: scale(1.18); }
+      100% { transform: scale(1); }
+    }
+    .teller { text-align: center; font-weight: 700; margin: 8px 0 16px; }
+
+    .qr-vak {
+      background: #fff;
+      border-radius: 16px;
+      padding: 14px;
+      text-align: center;
+      border: 1px solid var(--lijn);
+    }
+    #qr {
+      display: inline-block;
+      width: 184px;
+      height: 184px;
+    }
+    #qr svg { width: 100%; height: 100%; display: block; }
+    .qr-vak p { margin: 10px 0 0; color: var(--tekst-zacht); }
+
+    .actie {
+      background: var(--creme-kaart);
+      border: 1px solid var(--lijn);
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 12px;
+      box-shadow: var(--schaduw);
+    }
+    .actie h3 { margin: 0 0 6px; font-size: 1.05rem; }
+    .actie p { margin: 0 0 8px; color: var(--tekst-zacht); }
+    .meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+    .chip {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 3px 8px;
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .03em;
+      text-transform: uppercase;
+    }
+    .chip.voorbeeld { background: #F3D9A0; color: #5a3b12; }
+    .chip.tot { background: #eedfd0; color: var(--tekst); text-transform: none; font-weight: 600; }
+
+    .locatie { font-size: 1.05rem; margin: 0 0 10px; }
+    .producten { display: grid; gap: 8px; padding: 0; margin: 10px 0 0; list-style: none; }
+    .producten li {
+      background: #fff;
+      border-radius: 12px;
+      padding: 12px 14px;
+      border: 1px solid var(--lijn);
+      font-weight: 600;
+    }
+
+    .knop, .knop-sec {
+      display: block;
+      width: 100%;
+      min-height: 48px;
+      border-radius: 14px;
+      border: 0;
+      padding: 12px 16px;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+    .knop { background: var(--bordeaux); color: var(--creme); }
+    .knop:focus-visible, .knop-sec:focus-visible, .nav-btn:focus-visible, input:focus-visible, textarea:focus-visible {
+      outline: 3px solid var(--goud);
+      outline-offset: 2px;
+    }
+    .knop:disabled { opacity: .45; }
+    .knop-sec {
+      background: transparent;
+      color: var(--bordeaux);
+      border: 2px solid var(--bordeaux);
+    }
+    a.knop { text-decoration: none; text-align: center; }
+
+    label.veld { display: block; font-weight: 600; margin: 12px 0 6px; }
+    input[type="text"], input[type="password"], input[type="date"], textarea {
+      width: 100%;
+      min-height: 48px;
+      border-radius: 12px;
+      border: 1.5px solid #d2b88a;
+      background: #fff;
+      padding: 10px 12px;
+      color: var(--tekst);
+    }
+    textarea { min-height: 88px; resize: vertical; }
+
+    .stat {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .stat div {
+      flex: 1;
+      background: #fff;
+      border-radius: 14px;
+      padding: 12px;
+      text-align: center;
+      border: 1px solid var(--lijn);
+    }
+    .stat b { display: block; font-size: 1.6rem; color: var(--bordeaux); }
+    #scanner-video {
+      width: 100%;
+      max-height: 220px;
+      border-radius: 14px;
+      background: #111;
+      display: none;
+      margin-top: 10px;
+    }
+    #scan-status, #kraam-melding, #pin-fout { color: var(--tekst-zacht); min-height: 1.3em; }
+
+    nav.tab {
+      position: sticky;
+      bottom: 0;
+      left: 0; right: 0;
+      height: var(--nav-h);
+      background: var(--creme-kaart);
+      border-top: 1px solid var(--lijn);
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      padding: 6px 6px calc(6px + env(safe-area-inset-bottom));
+    }
+    .nav-btn {
+      border: 0;
+      background: transparent;
+      color: var(--tekst-zacht);
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: .82rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+    }
+    .nav-btn .ico { font-size: 1.15rem; line-height: 1; }
+    .nav-btn[aria-current="page"] {
+      color: var(--bordeaux);
+      background: #f3ddb4;
+    }
+
+    .overlay {
+      display: none;
+      position: absolute;
+      inset: 0;
+      background: rgba(26, 10, 13, .55);
+      z-index: 20;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .overlay.aan { display: flex; }
+    .dialoog {
+      background: var(--creme-kaart);
+      border-radius: 20px;
+      padding: 20px;
+      width: 100%;
+      max-width: 340px;
+      box-shadow: var(--schaduw);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .dialoog h2 { margin: 0 0 8px; font-family: Palatino, Georgia, serif; }
+
+    #feest .dialoog { background: linear-gradient(180deg, #fff8ea, #f3ddb4); }
+    .confetti {
+      pointer-events: none;
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+    .confetti i {
+      position: absolute;
+      top: -10px;
+      width: 8px; height: 12px;
+      border-radius: 2px;
+      animation: val 1.8s linear forwards;
+    }
+    @keyframes val {
+      to { transform: translateY(380px) rotate(280deg); opacity: .2; }
+    }
+
+    .toast {
+      display: none;
+      position: absolute;
+      left: 16px; right: 16px;
+      bottom: calc(var(--nav-h) + 12px);
+      background: var(--bordeaux-donker);
+      color: var(--creme);
+      padding: 12px 14px;
+      border-radius: 12px;
+      text-align: center;
+      z-index: 15;
+      font-weight: 600;
+    }
+    .toast.aan { display: block; animation: in .2s ease; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="bord">
+      <div class="lint" aria-hidden="true"></div>
+      <h1>De Oliebollen <span>Bakkerij</span></h1>
+      <p class="slagzin">Dagelijks vers gebakken</p>
+      <div class="bollen-rij" aria-hidden="true"><i class="mini-bol"></i><i class="mini-bol"></i><i class="mini-bol"></i></div>
+      <div class="demo-label">Klikbaar ontwerp · demo</div>
+      <div class="kraam-schakel">
+        <label class="switch" for="toggle-kraam">
+          <input type="checkbox" id="toggle-kraam" />
+          <span class="slider"></span>
+        </label>
+        <span>Ik ben de kraam</span>
+      </div>
+    </header>
+
+    <main id="inhoud">
+      <section class="scherm aan" id="scherm-kaart" data-scherm="kaart">
+        <article class="kaart">
+          <span class="gratis">10e zak gratis</span>
+          <h2>Jouw spaarkaart</h2>
+          <p class="sub">Laat je QR-code scannen bij de kraam. Elke zak is een stempel.</p>
+          <div class="rooster" id="rooster" aria-label="Spaarkaart met tien vakjes"></div>
+          <p class="teller" id="kaart-teller">0 van 10 stempels</p>
+          <div class="qr-vak">
+            <div id="qr" role="img" aria-label="Persoonlijke QR-code om te laten scannen"></div>
+            <p>Laat deze code scannen bij de kraam</p>
+          </div>
+        </article>
+      </section>
+
+      <section class="scherm" id="scherm-acties" data-scherm="acties">
+        <h2>Acties</h2>
+        <p class="sub">Aanbiedingen van De Oliebollen Bakkerij. Voorbeelden zijn zo gemarkeerd.</p>
+        <div id="actie-lijst"></div>
+      </section>
+
+      <section class="scherm" id="scherm-info" data-scherm="info">
+        <article class="kaart">
+          <h2>De kraam</h2>
+          <p class="locatie">Woonboulevard, Veenendaal</p>
+          <a class="knop" id="btn-route" target="_blank" rel="noopener noreferrer"
+             href="https://www.google.com/maps/search/?api=1&amp;query=De+Oliebollen+Bakkerij+Woonboulevard+Veenendaal">Route</a>
+          <h3 style="margin:18px 0 8px;font-size:1rem;">Openingstijden</h3>
+          <span class="chip voorbeeld">Voorbeeld</span>
+          <p class="sub" style="margin-top:8px">Tijden nog niet bevestigd, alleen ter illustratie.</p>
+          <ul class="producten" aria-label="Voorbeeldopeningstijden">
+            <li>Ma–do · 11:00–20:00</li>
+            <li>Vr–za · 11:00–21:00</li>
+            <li>Zo · 11:00–20:00</li>
+          </ul>
+          <h3 style="margin:18px 0 8px;font-size:1rem;">Vers van de bakplaat</h3>
+          <ul class="producten">
+            <li>Oliebollen</li>
+            <li>Krentenbollen</li>
+            <li>Appelbeignets</li>
+          </ul>
+        </article>
+      </section>
+
+      <section class="scherm" id="scherm-scan" data-scherm="scan">
+        <article class="kaart">
+          <h2>Scan klant</h2>
+          <p class="sub">Scan de QR-code op de telefoon van de klant. Op één toestel gebruik je Demo-scan.</p>
+          <div class="stat">
+            <div><span>Vandaag uitgegeven stempels</span><b id="vandaag-stempels">0</b></div>
+            <div><span>Ingewisseld</span><b id="ingewisseld">0</b></div>
+          </div>
+          <video id="scanner-video" playsinline muted></video>
+          <button type="button" class="knop" id="btn-scan-start">Camera openen</button>
+          <button type="button" class="knop-sec" id="btn-demo-scan">Demo-scan</button>
+          <button type="button" class="knop-sec" id="btn-inwisselen">Gratis zak inwisselen</button>
+          <p id="scan-status"></p>
+        </article>
+      </section>
+
+      <section class="scherm" id="scherm-nieuwe-actie" data-scherm="nieuwe-actie">
+        <article class="kaart">
+          <h2>Nieuwe actie</h2>
+          <p class="sub">Verschijnt meteen in de actielijst van de klant op dit toestel.</p>
+          <label class="veld" for="actie-titel">Titel</label>
+          <input type="text" id="actie-titel" maxlength="80" placeholder="Bijvoorbeeld: Verse appelflappen" />
+          <label class="veld" for="actie-tekst">Tekst</label>
+          <textarea id="actie-tekst" maxlength="240" placeholder="Wat is de actie?"></textarea>
+          <label class="veld" for="actie-tot">Tot wanneer</label>
+          <input type="date" id="actie-tot" />
+          <button type="button" class="knop" id="btn-actie-opslaan">Actie plaatsen</button>
+          <p id="kraam-melding"></p>
+        </article>
+      </section>
+    </main>
+
+    <nav class="tab" aria-label="Hoofdmenu">
+      <button type="button" class="nav-btn" id="nav-kaart" data-naar="kaart" aria-current="page">
+        <span class="ico" aria-hidden="true">◉</span>Spaarkaart
+      </button>
+      <button type="button" class="nav-btn" id="nav-acties" data-naar="acties">
+        <span class="ico" aria-hidden="true">★</span>Acties
+      </button>
+      <button type="button" class="nav-btn" id="nav-info" data-naar="info">
+        <span class="ico" aria-hidden="true">⌂</span>Kraam
+      </button>
+    </nav>
+
+    <div class="overlay" id="pin-modal" role="dialog" aria-modal="true" aria-labelledby="pin-titel">
+      <div class="dialoog">
+        <h2 id="pin-titel">Kraam-modus</h2>
+        <p>Dit is een demo. Pincode: 1234</p>
+        <label class="veld" for="pin-input">Pincode</label>
+        <input type="password" id="pin-input" inputmode="numeric" maxlength="6" autocomplete="off" />
+        <p id="pin-fout" hidden>Onjuiste pincode</p>
+        <button type="button" class="knop" id="pin-ok">OK</button>
+        <button type="button" class="knop-sec" id="pin-annuleren">Annuleren</button>
+      </div>
+    </div>
+
+    <div class="overlay" id="feest" role="dialog" aria-modal="true" aria-labelledby="feest-titel">
+      <div class="dialoog">
+        <div class="confetti" id="confetti" aria-hidden="true"></div>
+        <h2 id="feest-titel">De kaart is vol!</h2>
+        <p>De 10e zak is gratis. Wissel hem in bij de kraam.</p>
+        <button type="button" class="knop" id="feest-dicht">Top!</button>
+      </div>
+    </div>
+
+    <div class="toast" id="toast" role="status"></div>
+  </div>
+
+  <script>
+/* QR Code Generator for JavaScript — Copyright (c) 2009 Kazuhiko Arase — MIT License */
+/**
+ * Minified by jsDelivr using Terser v5.37.0.
+ * Original file: /npm/qrcode-generator@1.4.4/qrcode.js
+ *
+ * Do NOT use SRI with dynamically generated files! More information: https://www.jsdelivr.com/using-sri-with-dynamic-files
+ */
+var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],f={},c=function(t,r){o=function(t){for(var r=new Array(t),e=0;e<t;e+=1){r[e]=new Array(t);for(var n=0;n<t;n+=1)r[e][n]=null}return r}(i=4*e+17),l(0,0),l(i-7,0),l(0,i-7),s(),h(),d(t,r),e>=7&&v(t),null==a&&(a=p(e,n,u)),w(a,r)},l=function(t,r){for(var e=-1;e<=7;e+=1)if(!(t+e<=-1||i<=t+e))for(var n=-1;n<=7;n+=1)r+n<=-1||i<=r+n||(o[t+e][r+n]=0<=e&&e<=6&&(0==n||6==n)||0<=n&&n<=6&&(0==e||6==e)||2<=e&&e<=4&&2<=n&&n<=4)},h=function(){for(var t=8;t<i-8;t+=1)null==o[t][6]&&(o[t][6]=t%2==0);for(var r=8;r<i-8;r+=1)null==o[6][r]&&(o[6][r]=r%2==0)},s=function(){for(var t=B.getPatternPosition(e),r=0;r<t.length;r+=1)for(var n=0;n<t.length;n+=1){var i=t[r],a=t[n];if(null==o[i][a])for(var u=-2;u<=2;u+=1)for(var f=-2;f<=2;f+=1)o[i+u][a+f]=-2==u||2==u||-2==f||2==f||0==u&&0==f}},v=function(t){for(var r=B.getBCHTypeNumber(e),n=0;n<18;n+=1){var a=!t&&1==(r>>n&1);o[Math.floor(n/3)][n%3+i-8-3]=a}for(n=0;n<18;n+=1){a=!t&&1==(r>>n&1);o[n%3+i-8-3][Math.floor(n/3)]=a}},d=function(t,r){for(var e=n<<3|r,a=B.getBCHTypeInfo(e),u=0;u<15;u+=1){var f=!t&&1==(a>>u&1);u<6?o[u][8]=f:u<8?o[u+1][8]=f:o[i-15+u][8]=f}for(u=0;u<15;u+=1){f=!t&&1==(a>>u&1);u<8?o[8][i-u-1]=f:u<9?o[8][15-u-1+1]=f:o[8][15-u-1]=f}o[i-8][8]=!t},w=function(t,r){for(var e=-1,n=i-1,a=7,u=0,f=B.getMaskFunction(r),c=i-1;c>0;c-=2)for(6==c&&(c-=1);;){for(var g=0;g<2;g+=1)if(null==o[n][c-g]){var l=!1;u<t.length&&(l=1==(t[u]>>>a&1)),f(n,c-g)&&(l=!l),o[n][c-g]=l,-1==(a-=1)&&(u+=1,a=7)}if((n+=e)<0||i<=n){n-=e,e=-e;break}}},p=function(t,r,e){for(var n=A.getRSBlocks(t,r),o=b(),i=0;i<e.length;i+=1){var a=e[i];o.put(a.getMode(),4),o.put(a.getLength(),B.getLengthInBits(a.getMode(),t)),a.write(o)}var u=0;for(i=0;i<n.length;i+=1)u+=n[i].dataCount;if(o.getLengthInBits()>8*u)throw"code length overflow. ("+o.getLengthInBits()+">"+8*u+")";for(o.getLengthInBits()+4<=8*u&&o.put(0,4);o.getLengthInBits()%8!=0;)o.putBit(!1);for(;!(o.getLengthInBits()>=8*u||(o.put(236,8),o.getLengthInBits()>=8*u));)o.put(17,8);return function(t,r){for(var e=0,n=0,o=0,i=new Array(r.length),a=new Array(r.length),u=0;u<r.length;u+=1){var f=r[u].dataCount,c=r[u].totalCount-f;n=Math.max(n,f),o=Math.max(o,c),i[u]=new Array(f);for(var g=0;g<i[u].length;g+=1)i[u][g]=255&t.getBuffer()[g+e];e+=f;var l=B.getErrorCorrectPolynomial(c),h=k(i[u],l.getLength()-1).mod(l);for(a[u]=new Array(l.getLength()-1),g=0;g<a[u].length;g+=1){var s=g+h.getLength()-a[u].length;a[u][g]=s>=0?h.getAt(s):0}}var v=0;for(g=0;g<r.length;g+=1)v+=r[g].totalCount;var d=new Array(v),w=0;for(g=0;g<n;g+=1)for(u=0;u<r.length;u+=1)g<i[u].length&&(d[w]=i[u][g],w+=1);for(g=0;g<o;g+=1)for(u=0;u<r.length;u+=1)g<a[u].length&&(d[w]=a[u][g],w+=1);return d}(o,n)};f.addData=function(t,r){var e=null;switch(r=r||"Byte"){case"Numeric":e=M(t);break;case"Alphanumeric":e=x(t);break;case"Byte":e=m(t);break;case"Kanji":e=L(t);break;default:throw"mode:"+r}u.push(e),a=null},f.isDark=function(t,r){if(t<0||i<=t||r<0||i<=r)throw t+","+r;return o[t][r]},f.getModuleCount=function(){return i},f.make=function(){if(e<1){for(var t=1;t<40;t++){for(var r=A.getRSBlocks(t,n),o=b(),i=0;i<u.length;i++){var a=u[i];o.put(a.getMode(),4),o.put(a.getLength(),B.getLengthInBits(a.getMode(),t)),a.write(o)}var g=0;for(i=0;i<r.length;i++)g+=r[i].dataCount;if(o.getLengthInBits()<=8*g)break}e=t}c(!1,function(){for(var t=0,r=0,e=0;e<8;e+=1){c(!0,e);var n=B.getLostPoint(f);(0==e||t>n)&&(t=n,r=e)}return r}())},f.createTableTag=function(t,r){t=t||2;var e="";e+='<table style="',e+=" border-width: 0px; border-style: none;",e+=" border-collapse: collapse;",e+=" padding: 0px; margin: "+(r=void 0===r?4*t:r)+"px;",e+='">',e+="<tbody>";for(var n=0;n<f.getModuleCount();n+=1){e+="<tr>";for(var o=0;o<f.getModuleCount();o+=1)e+='<td style="',e+=" border-width: 0px; border-style: none;",e+=" border-collapse: collapse;",e+=" padding: 0px; margin: 0px;",e+=" width: "+t+"px;",e+=" height: "+t+"px;",e+=" background-color: ",e+=f.isDark(n,o)?"#000000":"#ffffff",e+=";",e+='"/>';e+="</tr>"}return e+="</tbody>",e+="</table>"},f.createSvgTag=function(t,r,e,n){var o={};"object"==typeof arguments[0]&&(t=(o=arguments[0]).cellSize,r=o.margin,e=o.alt,n=o.title),t=t||2,r=void 0===r?4*t:r,(e="string"==typeof e?{text:e}:e||{}).text=e.text||null,e.id=e.text?e.id||"qrcode-description":null,(n="string"==typeof n?{text:n}:n||{}).text=n.text||null,n.id=n.text?n.id||"qrcode-title":null;var i,a,u,c,g=f.getModuleCount()*t+2*r,l="";for(c="l"+t+",0 0,"+t+" -"+t+",0 0,-"+t+"z ",l+='<svg version="1.1" xmlns="http://www.w3.org/2000/svg"',l+=o.scalable?"":' width="'+g+'px" height="'+g+'px"',l+=' viewBox="0 0 '+g+" "+g+'" ',l+=' preserveAspectRatio="xMinYMin meet"',l+=n.text||e.text?' role="img" aria-labelledby="'+y([n.id,e.id].join(" ").trim())+'"':"",l+=">",l+=n.text?'<title id="'+y(n.id)+'">'+y(n.text)+"</title>":"",l+=e.text?'<description id="'+y(e.id)+'">'+y(e.text)+"</description>":"",l+='<rect width="100%" height="100%" fill="white" cx="0" cy="0"/>',l+='<path d="',a=0;a<f.getModuleCount();a+=1)for(u=a*t+r,i=0;i<f.getModuleCount();i+=1)f.isDark(a,i)&&(l+="M"+(i*t+r)+","+u+c);return l+='" stroke="transparent" fill="black"/>',l+="</svg>"},f.createDataURL=function(t,r){t=t||2,r=void 0===r?4*t:r;var e=f.getModuleCount()*t+2*r,n=r,o=e-r;return I(e,e,(function(r,e){if(n<=r&&r<o&&n<=e&&e<o){var i=Math.floor((r-n)/t),a=Math.floor((e-n)/t);return f.isDark(a,i)?0:1}return 1}))},f.createImgTag=function(t,r,e){t=t||2,r=void 0===r?4*t:r;var n=f.getModuleCount()*t+2*r,o="";return o+="<img",o+=' src="',o+=f.createDataURL(t,r),o+='"',o+=' width="',o+=n,o+='"',o+=' height="',o+=n,o+='"',e&&(o+=' alt="',o+=y(e),o+='"'),o+="/>"};var y=function(t){for(var r="",e=0;e<t.length;e+=1){var n=t.charAt(e);switch(n){case"<":r+="&lt;";break;case">":r+="&gt;";break;case"&":r+="&amp;";break;case'"':r+="&quot;";break;default:r+=n}}return r};return f.createASCII=function(t,r){if((t=t||1)<2)return function(t){t=void 0===t?2:t;var r,e,n,o,i,a=1*f.getModuleCount()+2*t,u=t,c=a-t,g={"██":"█","█ ":"▀"," █":"▄","  ":" "},l={"██":"▀","█ ":"▀"," █":" ","  ":" "},h="";for(r=0;r<a;r+=2){for(n=Math.floor((r-u)/1),o=Math.floor((r+1-u)/1),e=0;e<a;e+=1)i="█",u<=e&&e<c&&u<=r&&r<c&&f.isDark(n,Math.floor((e-u)/1))&&(i=" "),u<=e&&e<c&&u<=r+1&&r+1<c&&f.isDark(o,Math.floor((e-u)/1))?i+=" ":i+="█",h+=t<1&&r+1>=c?l[i]:g[i];h+="\n"}return a%2&&t>0?h.substring(0,h.length-a-1)+Array(a+1).join("▀"):h.substring(0,h.length-1)}(r);t-=1,r=void 0===r?2*t:r;var e,n,o,i,a=f.getModuleCount()*t+2*r,u=r,c=a-r,g=Array(t+1).join("██"),l=Array(t+1).join("  "),h="",s="";for(e=0;e<a;e+=1){for(o=Math.floor((e-u)/t),s="",n=0;n<a;n+=1)i=1,u<=n&&n<c&&u<=e&&e<c&&f.isDark(o,Math.floor((n-u)/t))&&(i=0),s+=i?g:l;for(o=0;o<t;o+=1)h+=s+"\n"}return h.substring(0,h.length-1)},f.renderTo2dContext=function(t,r){r=r||2;for(var e=f.getModuleCount(),n=0;n<e;n++)for(var o=0;o<e;o++)t.fillStyle=f.isDark(n,o)?"black":"white",t.fillRect(n*r,o*r,r,r)},f};t.stringToBytes=(t.stringToBytesFuncs={default:function(t){for(var r=[],e=0;e<t.length;e+=1){var n=t.charCodeAt(e);r.push(255&n)}return r}}).default,t.createStringToBytes=function(t,r){var e=function(){for(var e=S(t),n=function(){var t=e.read();if(-1==t)throw"eof";return t},o=0,i={};;){var a=e.read();if(-1==a)break;var u=n(),f=n()<<8|n();i[String.fromCharCode(a<<8|u)]=f,o+=1}if(o!=r)throw o+" != "+r;return i}(),n="?".charCodeAt(0);return function(t){for(var r=[],o=0;o<t.length;o+=1){var i=t.charCodeAt(o);if(i<128)r.push(i);else{var a=e[t.charAt(o)];"number"==typeof a?(255&a)==a?r.push(a):(r.push(a>>>8),r.push(255&a)):r.push(n)}}return r}};var r,e,n,o,i,a=1,u=2,f=4,c=8,g={L:1,M:0,Q:3,H:2},l=0,h=1,s=2,v=3,d=4,w=5,p=6,y=7,B=(r=[[],[6,18],[6,22],[6,26],[6,30],[6,34],[6,22,38],[6,24,42],[6,26,46],[6,28,50],[6,30,54],[6,32,58],[6,34,62],[6,26,46,66],[6,26,48,70],[6,26,50,74],[6,30,54,78],[6,30,56,82],[6,30,58,86],[6,34,62,90],[6,28,50,72,94],[6,26,50,74,98],[6,30,54,78,102],[6,28,54,80,106],[6,32,58,84,110],[6,30,58,86,114],[6,34,62,90,118],[6,26,50,74,98,122],[6,30,54,78,102,126],[6,26,52,78,104,130],[6,30,56,82,108,134],[6,34,60,86,112,138],[6,30,58,86,114,142],[6,34,62,90,118,146],[6,30,54,78,102,126,150],[6,24,50,76,102,128,154],[6,28,54,80,106,132,158],[6,32,58,84,110,136,162],[6,26,54,82,110,138,166],[6,30,58,86,114,142,170]],e=1335,n=7973,i=function(t){for(var r=0;0!=t;)r+=1,t>>>=1;return r},(o={}).getBCHTypeInfo=function(t){for(var r=t<<10;i(r)-i(e)>=0;)r^=e<<i(r)-i(e);return 21522^(t<<10|r)},o.getBCHTypeNumber=function(t){for(var r=t<<12;i(r)-i(n)>=0;)r^=n<<i(r)-i(n);return t<<12|r},o.getPatternPosition=function(t){return r[t-1]},o.getMaskFunction=function(t){switch(t){case l:return function(t,r){return(t+r)%2==0};case h:return function(t,r){return t%2==0};case s:return function(t,r){return r%3==0};case v:return function(t,r){return(t+r)%3==0};case d:return function(t,r){return(Math.floor(t/2)+Math.floor(r/3))%2==0};case w:return function(t,r){return t*r%2+t*r%3==0};case p:return function(t,r){return(t*r%2+t*r%3)%2==0};case y:return function(t,r){return(t*r%3+(t+r)%2)%2==0};default:throw"bad maskPattern:"+t}},o.getErrorCorrectPolynomial=function(t){for(var r=k([1],0),e=0;e<t;e+=1)r=r.multiply(k([1,C.gexp(e)],0));return r},o.getLengthInBits=function(t,r){if(1<=r&&r<10)switch(t){case a:return 10;case u:return 9;case f:case c:return 8;default:throw"mode:"+t}else if(r<27)switch(t){case a:return 12;case u:return 11;case f:return 16;case c:return 10;default:throw"mode:"+t}else{if(!(r<41))throw"type:"+r;switch(t){case a:return 14;case u:return 13;case f:return 16;case c:return 12;default:throw"mode:"+t}}},o.getLostPoint=function(t){for(var r=t.getModuleCount(),e=0,n=0;n<r;n+=1)for(var o=0;o<r;o+=1){for(var i=0,a=t.isDark(n,o),u=-1;u<=1;u+=1)if(!(n+u<0||r<=n+u))for(var f=-1;f<=1;f+=1)o+f<0||r<=o+f||0==u&&0==f||a==t.isDark(n+u,o+f)&&(i+=1);i>5&&(e+=3+i-5)}for(n=0;n<r-1;n+=1)for(o=0;o<r-1;o+=1){var c=0;t.isDark(n,o)&&(c+=1),t.isDark(n+1,o)&&(c+=1),t.isDark(n,o+1)&&(c+=1),t.isDark(n+1,o+1)&&(c+=1),0!=c&&4!=c||(e+=3)}for(n=0;n<r;n+=1)for(o=0;o<r-6;o+=1)t.isDark(n,o)&&!t.isDark(n,o+1)&&t.isDark(n,o+2)&&t.isDark(n,o+3)&&t.isDark(n,o+4)&&!t.isDark(n,o+5)&&t.isDark(n,o+6)&&(e+=40);for(o=0;o<r;o+=1)for(n=0;n<r-6;n+=1)t.isDark(n,o)&&!t.isDark(n+1,o)&&t.isDark(n+2,o)&&t.isDark(n+3,o)&&t.isDark(n+4,o)&&!t.isDark(n+5,o)&&t.isDark(n+6,o)&&(e+=40);var g=0;for(o=0;o<r;o+=1)for(n=0;n<r;n+=1)t.isDark(n,o)&&(g+=1);return e+=Math.abs(100*g/r/r-50)/5*10},o),C=function(){for(var t=new Array(256),r=new Array(256),e=0;e<8;e+=1)t[e]=1<<e;for(e=8;e<256;e+=1)t[e]=t[e-4]^t[e-5]^t[e-6]^t[e-8];for(e=0;e<255;e+=1)r[t[e]]=e;var n={glog:function(t){if(t<1)throw"glog("+t+")";return r[t]},gexp:function(r){for(;r<0;)r+=255;for(;r>=256;)r-=255;return t[r]}};return n}();function k(t,r){if(void 0===t.length)throw t.length+"/"+r;var e=function(){for(var e=0;e<t.length&&0==t[e];)e+=1;for(var n=new Array(t.length-e+r),o=0;o<t.length-e;o+=1)n[o]=t[o+e];return n}(),n={getAt:function(t){return e[t]},getLength:function(){return e.length},multiply:function(t){for(var r=new Array(n.getLength()+t.getLength()-1),e=0;e<n.getLength();e+=1)for(var o=0;o<t.getLength();o+=1)r[e+o]^=C.gexp(C.glog(n.getAt(e))+C.glog(t.getAt(o)));return k(r,0)},mod:function(t){if(n.getLength()-t.getLength()<0)return n;for(var r=C.glog(n.getAt(0))-C.glog(t.getAt(0)),e=new Array(n.getLength()),o=0;o<n.getLength();o+=1)e[o]=n.getAt(o);for(o=0;o<t.getLength();o+=1)e[o]^=C.gexp(C.glog(t.getAt(o))+r);return k(e,0).mod(t)}};return n}var A=function(){var t=[[1,26,19],[1,26,16],[1,26,13],[1,26,9],[1,44,34],[1,44,28],[1,44,22],[1,44,16],[1,70,55],[1,70,44],[2,35,17],[2,35,13],[1,100,80],[2,50,32],[2,50,24],[4,25,9],[1,134,108],[2,67,43],[2,33,15,2,34,16],[2,33,11,2,34,12],[2,86,68],[4,43,27],[4,43,19],[4,43,15],[2,98,78],[4,49,31],[2,32,14,4,33,15],[4,39,13,1,40,14],[2,121,97],[2,60,38,2,61,39],[4,40,18,2,41,19],[4,40,14,2,41,15],[2,146,116],[3,58,36,2,59,37],[4,36,16,4,37,17],[4,36,12,4,37,13],[2,86,68,2,87,69],[4,69,43,1,70,44],[6,43,19,2,44,20],[6,43,15,2,44,16],[4,101,81],[1,80,50,4,81,51],[4,50,22,4,51,23],[3,36,12,8,37,13],[2,116,92,2,117,93],[6,58,36,2,59,37],[4,46,20,6,47,21],[7,42,14,4,43,15],[4,133,107],[8,59,37,1,60,38],[8,44,20,4,45,21],[12,33,11,4,34,12],[3,145,115,1,146,116],[4,64,40,5,65,41],[11,36,16,5,37,17],[11,36,12,5,37,13],[5,109,87,1,110,88],[5,65,41,5,66,42],[5,54,24,7,55,25],[11,36,12,7,37,13],[5,122,98,1,123,99],[7,73,45,3,74,46],[15,43,19,2,44,20],[3,45,15,13,46,16],[1,135,107,5,136,108],[10,74,46,1,75,47],[1,50,22,15,51,23],[2,42,14,17,43,15],[5,150,120,1,151,121],[9,69,43,4,70,44],[17,50,22,1,51,23],[2,42,14,19,43,15],[3,141,113,4,142,114],[3,70,44,11,71,45],[17,47,21,4,48,22],[9,39,13,16,40,14],[3,135,107,5,136,108],[3,67,41,13,68,42],[15,54,24,5,55,25],[15,43,15,10,44,16],[4,144,116,4,145,117],[17,68,42],[17,50,22,6,51,23],[19,46,16,6,47,17],[2,139,111,7,140,112],[17,74,46],[7,54,24,16,55,25],[34,37,13],[4,151,121,5,152,122],[4,75,47,14,76,48],[11,54,24,14,55,25],[16,45,15,14,46,16],[6,147,117,4,148,118],[6,73,45,14,74,46],[11,54,24,16,55,25],[30,46,16,2,47,17],[8,132,106,4,133,107],[8,75,47,13,76,48],[7,54,24,22,55,25],[22,45,15,13,46,16],[10,142,114,2,143,115],[19,74,46,4,75,47],[28,50,22,6,51,23],[33,46,16,4,47,17],[8,152,122,4,153,123],[22,73,45,3,74,46],[8,53,23,26,54,24],[12,45,15,28,46,16],[3,147,117,10,148,118],[3,73,45,23,74,46],[4,54,24,31,55,25],[11,45,15,31,46,16],[7,146,116,7,147,117],[21,73,45,7,74,46],[1,53,23,37,54,24],[19,45,15,26,46,16],[5,145,115,10,146,116],[19,75,47,10,76,48],[15,54,24,25,55,25],[23,45,15,25,46,16],[13,145,115,3,146,116],[2,74,46,29,75,47],[42,54,24,1,55,25],[23,45,15,28,46,16],[17,145,115],[10,74,46,23,75,47],[10,54,24,35,55,25],[19,45,15,35,46,16],[17,145,115,1,146,116],[14,74,46,21,75,47],[29,54,24,19,55,25],[11,45,15,46,46,16],[13,145,115,6,146,116],[14,74,46,23,75,47],[44,54,24,7,55,25],[59,46,16,1,47,17],[12,151,121,7,152,122],[12,75,47,26,76,48],[39,54,24,14,55,25],[22,45,15,41,46,16],[6,151,121,14,152,122],[6,75,47,34,76,48],[46,54,24,10,55,25],[2,45,15,64,46,16],[17,152,122,4,153,123],[29,74,46,14,75,47],[49,54,24,10,55,25],[24,45,15,46,46,16],[4,152,122,18,153,123],[13,74,46,32,75,47],[48,54,24,14,55,25],[42,45,15,32,46,16],[20,147,117,4,148,118],[40,75,47,7,76,48],[43,54,24,22,55,25],[10,45,15,67,46,16],[19,148,118,6,149,119],[18,75,47,31,76,48],[34,54,24,34,55,25],[20,45,15,61,46,16]],r=function(t,r){var e={};return e.totalCount=t,e.dataCount=r,e},e={};return e.getRSBlocks=function(e,n){var o=function(r,e){switch(e){case g.L:return t[4*(r-1)+0];case g.M:return t[4*(r-1)+1];case g.Q:return t[4*(r-1)+2];case g.H:return t[4*(r-1)+3];default:return}}(e,n);if(void 0===o)throw"bad rs block @ typeNumber:"+e+"/errorCorrectionLevel:"+n;for(var i=o.length/3,a=[],u=0;u<i;u+=1)for(var f=o[3*u+0],c=o[3*u+1],l=o[3*u+2],h=0;h<f;h+=1)a.push(r(c,l));return a},e}(),b=function(){var t=[],r=0,e={getBuffer:function(){return t},getAt:function(r){var e=Math.floor(r/8);return 1==(t[e]>>>7-r%8&1)},put:function(t,r){for(var n=0;n<r;n+=1)e.putBit(1==(t>>>r-n-1&1))},getLengthInBits:function(){return r},putBit:function(e){var n=Math.floor(r/8);t.length<=n&&t.push(0),e&&(t[n]|=128>>>r%8),r+=1}};return e},M=function(t){var r=a,e=t,n={getMode:function(){return r},getLength:function(t){return e.length},write:function(t){for(var r=e,n=0;n+2<r.length;)t.put(o(r.substring(n,n+3)),10),n+=3;n<r.length&&(r.length-n==1?t.put(o(r.substring(n,n+1)),4):r.length-n==2&&t.put(o(r.substring(n,n+2)),7))}},o=function(t){for(var r=0,e=0;e<t.length;e+=1)r=10*r+i(t.charAt(e));return r},i=function(t){if("0"<=t&&t<="9")return t.charCodeAt(0)-"0".charCodeAt(0);throw"illegal char :"+t};return n},x=function(t){var r=u,e=t,n={getMode:function(){return r},getLength:function(t){return e.length},write:function(t){for(var r=e,n=0;n+1<r.length;)t.put(45*o(r.charAt(n))+o(r.charAt(n+1)),11),n+=2;n<r.length&&t.put(o(r.charAt(n)),6)}},o=function(t){if("0"<=t&&t<="9")return t.charCodeAt(0)-"0".charCodeAt(0);if("A"<=t&&t<="Z")return t.charCodeAt(0)-"A".charCodeAt(0)+10;switch(t){case" ":return 36;case"$":return 37;case"%":return 38;case"*":return 39;case"+":return 40;case"-":return 41;case".":return 42;case"/":return 43;case":":return 44;default:throw"illegal char :"+t}};return n},m=function(r){var e=f,n=t.stringToBytes(r),o={getMode:function(){return e},getLength:function(t){return n.length},write:function(t){for(var r=0;r<n.length;r+=1)t.put(n[r],8)}};return o},L=function(r){var e=c,n=t.stringToBytesFuncs.SJIS;if(!n)throw"sjis not supported.";!function(){var t=n("友");if(2!=t.length||38726!=(t[0]<<8|t[1]))throw"sjis not supported."}();var o=n(r),i={getMode:function(){return e},getLength:function(t){return~~(o.length/2)},write:function(t){for(var r=o,e=0;e+1<r.length;){var n=(255&r[e])<<8|255&r[e+1];if(33088<=n&&n<=40956)n-=33088;else{if(!(57408<=n&&n<=60351))throw"illegal char at "+(e+1)+"/"+n;n-=49472}n=192*(n>>>8&255)+(255&n),t.put(n,13),e+=2}if(e<r.length)throw"illegal char at "+(e+1)}};return i},D=function(){var t=[],r={writeByte:function(r){t.push(255&r)},writeShort:function(t){r.writeByte(t),r.writeByte(t>>>8)},writeBytes:function(t,e,n){e=e||0,n=n||t.length;for(var o=0;o<n;o+=1)r.writeByte(t[o+e])},writeString:function(t){for(var e=0;e<t.length;e+=1)r.writeByte(t.charCodeAt(e))},toByteArray:function(){return t},toString:function(){var r="";r+="[";for(var e=0;e<t.length;e+=1)e>0&&(r+=","),r+=t[e];return r+="]"}};return r},S=function(t){var r=t,e=0,n=0,o=0,i={read:function(){for(;o<8;){if(e>=r.length){if(0==o)return-1;throw"unexpected end of file./"+o}var t=r.charAt(e);if(e+=1,"="==t)return o=0,-1;t.match(/^\s$/)||(n=n<<6|a(t.charCodeAt(0)),o+=6)}var i=n>>>o-8&255;return o-=8,i}},a=function(t){if(65<=t&&t<=90)return t-65;if(97<=t&&t<=122)return t-97+26;if(48<=t&&t<=57)return t-48+52;if(43==t)return 62;if(47==t)return 63;throw"c:"+t};return i},I=function(t,r,e){for(var n=function(t,r){var e=t,n=r,o=new Array(t*r),i={setPixel:function(t,r,n){o[r*e+t]=n},write:function(t){t.writeString("GIF87a"),t.writeShort(e),t.writeShort(n),t.writeByte(128),t.writeByte(0),t.writeByte(0),t.writeByte(0),t.writeByte(0),t.writeByte(0),t.writeByte(255),t.writeByte(255),t.writeByte(255),t.writeString(","),t.writeShort(0),t.writeShort(0),t.writeShort(e),t.writeShort(n),t.writeByte(0);var r=a(2);t.writeByte(2);for(var o=0;r.length-o>255;)t.writeByte(255),t.writeBytes(r,o,255),o+=255;t.writeByte(r.length-o),t.writeBytes(r,o,r.length-o),t.writeByte(0),t.writeString(";")}},a=function(t){for(var r=1<<t,e=1+(1<<t),n=t+1,i=u(),a=0;a<r;a+=1)i.add(String.fromCharCode(a));i.add(String.fromCharCode(r)),i.add(String.fromCharCode(e));var f,c,g,l=D(),h=(f=l,c=0,g=0,{write:function(t,r){if(t>>>r!=0)throw"length over";for(;c+r>=8;)f.writeByte(255&(t<<c|g)),r-=8-c,t>>>=8-c,g=0,c=0;g|=t<<c,c+=r},flush:function(){c>0&&f.writeByte(g)}});h.write(r,n);var s=0,v=String.fromCharCode(o[s]);for(s+=1;s<o.length;){var d=String.fromCharCode(o[s]);s+=1,i.contains(v+d)?v+=d:(h.write(i.indexOf(v),n),i.size()<4095&&(i.size()==1<<n&&(n+=1),i.add(v+d)),v=d)}return h.write(i.indexOf(v),n),h.write(e,n),h.flush(),l.toByteArray()},u=function(){var t={},r=0,e={add:function(n){if(e.contains(n))throw"dup key:"+n;t[n]=r,r+=1},size:function(){return r},indexOf:function(r){return t[r]},contains:function(r){return void 0!==t[r]}};return e};return i}(t,r),o=0;o<r;o+=1)for(var i=0;i<t;i+=1)n.setPixel(i,o,e(i,o));var a=D();n.write(a);for(var u=function(){var t=0,r=0,e=0,n="",o={},i=function(t){n+=String.fromCharCode(a(63&t))},a=function(t){if(t<0);else{if(t<26)return 65+t;if(t<52)return t-26+97;if(t<62)return t-52+48;if(62==t)return 43;if(63==t)return 47}throw"n:"+t};return o.writeByte=function(n){for(t=t<<8|255&n,r+=8,e+=1;r>=6;)i(t>>>r-6),r-=6},o.flush=function(){if(r>0&&(i(t<<6-r),t=0,r=0),e%3!=0)for(var o=3-e%3,a=0;a<o;a+=1)n+="="},o.toString=function(){return n},o}(),f=a.toByteArray(),c=0;c<f.length;c+=1)u.writeByte(f[c]);return u.flush(),"data:image/gif;base64,"+u};return t}();qrcode.stringToBytesFuncs["UTF-8"]=function(t){return function(t){for(var r=[],e=0;e<t.length;e++){var n=t.charCodeAt(e);n<128?r.push(n):n<2048?r.push(192|n>>6,128|63&n):n<55296||n>=57344?r.push(224|n>>12,128|n>>6&63,128|63&n):(e++,n=65536+((1023&n)<<10|1023&t.charCodeAt(e)),r.push(240|n>>18,128|n>>12&63,128|n>>6&63,128|63&n))}return r}(t)},function(t){"function"==typeof define&&define.amd?define([],t):"object"==typeof exports&&(module.exports=t())}((function(){return qrcode}));
+  </script>
+  <script>
+(function () {
+  const KEY = "oliebollen-demo-v1";
+  const PIN = "1234";
+  const VOORBEELD_ACTIES = [
+    {
+      id: "vb-appel",
+      titel: "Verse appelflappen: 2+1 gratis",
+      tekst: "Koop twee zakken appelflappen en je krijgt de derde erbij.",
+      tot: "2026-11-08",
+      voorbeeld: true
+    },
+    {
+      id: "vb-oudjaar",
+      titel: "Oudejaarsdag: bestel op tijd",
+      tekst: "Bestel je oliebollen van tevoren, dan hoef je niet in de rij te staan.",
+      tot: "2026-12-31",
+      voorbeeld: true
+    }
+  ];
+
+  let data = laad();
+  let scherm = "kaart";
+  let scanlus = 0;
+  let stream = null;
+
+  function vandaag() {
+    return new Date().toLocaleDateString("en-CA", { timeZone: "Europe/Amsterdam" });
+  }
+  function nieuwId() {
+    const b = new Uint8Array(4);
+    crypto.getRandomValues(b);
+    return Array.from(b, x => x.toString(16).padStart(2, "0")).join("").toUpperCase();
+  }
+  function laad() {
+    try {
+      const raw = localStorage.getItem(KEY);
+      if (raw) {
+        const o = JSON.parse(raw);
+        if (o && o.klantId) {
+          if (o.dag !== vandaag()) { o.dag = vandaag(); o.vandaagStempels = 0; }
+          if (!Array.isArray(o.acties) || !o.acties.length) o.acties = VOORBEELD_ACTIES.slice();
+          return o;
+        }
+      }
+    } catch (e) {}
+    return {
+      klantId: nieuwId(),
+      stempels: 0,
+      dag: vandaag(),
+      vandaagStempels: 0,
+      ingewisseld: 0,
+      kraam: false,
+      acties: VOORBEELD_ACTIES.slice()
+    };
+  }
+  function bewaar() {
+    localStorage.setItem(KEY, JSON.stringify(data));
+  }
+
+  function tekenQR() {
+    const tekst = "oliebol:" + data.klantId;
+    const qr = qrcode(0, "M");
+    qr.addData(tekst);
+    qr.make();
+    document.getElementById("qr").innerHTML = qr.createSvgTag({
+      cellSize: 6,
+      margin: 4,
+      scalable: true,
+      alt: "Persoonlijke QR-code",
+      title: "Spaarkaart-code"
+    });
+  }
+
+  function tekenKaart(laatsteNieuw) {
+    const rooster = document.getElementById("rooster");
+    rooster.innerHTML = "";
+    for (let i = 1; i <= 10; i++) {
+      const el = document.createElement("div");
+      el.className = "bol" + (i <= data.stempels ? " gevuld" : "");
+      if (laatsteNieuw && i === data.stempels) el.classList.add("pop");
+      el.textContent = i === 10 ? "10" : String(i);
+      el.setAttribute("aria-label", i <= data.stempels ? "Stempel " + i + " gezet" : "Vakje " + i + " leeg");
+      rooster.appendChild(el);
+    }
+    document.getElementById("kaart-teller").textContent = data.stempels + " van 10 stempels";
+  }
+
+  function dagenTekst(iso) {
+    if (!iso) return "";
+    const tot = new Date(iso + "T23:59:59");
+    const nu = new Date();
+    const d = Math.ceil((tot - nu) / 86400000);
+    const mooi = tot.toLocaleDateString("nl-NL", { day: "numeric", month: "long", year: "numeric" });
+    if (d < 0) return "verlopen op " + mooi;
+    if (d === 0) return "tot vandaag, " + mooi;
+    if (d === 1) return "tot morgen, " + mooi + " · nog 1 dag";
+    return "tot " + mooi + " · nog " + d + " dagen";
+  }
+
+  function tekenActies() {
+    const box = document.getElementById("actie-lijst");
+    box.innerHTML = "";
+    data.acties.forEach(a => {
+      const art = document.createElement("article");
+      art.className = "actie";
+      art.innerHTML =
+        "<h3></h3><p></p><div class='meta'></div>";
+      art.querySelector("h3").textContent = a.titel;
+      art.querySelector("p").textContent = a.tekst;
+      const meta = art.querySelector(".meta");
+      if (a.voorbeeld) {
+        const c = document.createElement("span");
+        c.className = "chip voorbeeld";
+        c.textContent = "Voorbeeld";
+        meta.appendChild(c);
+      }
+      const t = document.createElement("span");
+      t.className = "chip tot";
+      t.textContent = dagenTekst(a.tot);
+      meta.appendChild(t);
+      box.appendChild(art);
+    });
+    if (!data.acties.length) {
+      box.innerHTML = "<p class='sub'>Nog geen acties.</p>";
+    }
+  }
+
+  function tekenKraamcijfers() {
+    document.getElementById("vandaag-stempels").textContent = String(data.vandaagStempels || 0);
+    document.getElementById("ingewisseld").textContent = String(data.ingewisseld || 0);
+  }
+
+  function toast(tekst) {
+    const el = document.getElementById("toast");
+    el.textContent = tekst;
+    el.classList.add("aan");
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => el.classList.remove("aan"), 2600);
+  }
+
+  function startFeest() {
+    const vak = document.getElementById("confetti");
+    vak.innerHTML = "";
+    const kleuren = ["#C9A227", "#6B1523", "#FFF8EA", "#E8D08A", "#ffffff", "#8a2232"];
+    for (let i = 0; i < 42; i++) {
+      const s = document.createElement("i");
+      s.style.left = (Math.random() * 100) + "%";
+      s.style.background = kleuren[i % kleuren.length];
+      s.style.animationDelay = (Math.random() * 0.5) + "s";
+      s.style.transform = "rotate(" + (Math.random() * 80) + "deg)";
+      vak.appendChild(s);
+    }
+    document.getElementById("feest").classList.add("aan");
+  }
+
+  function geefStempel() {
+    if (data.dag !== vandaag()) {
+      data.dag = vandaag();
+      data.vandaagStempels = 0;
+    }
+    if (data.stempels >= 10) {
+      toast("De kaart is vol. Wissel eerst de gratis zak in.");
+      document.getElementById("scan-status").textContent = "Kaart is vol — eerst inwisselen.";
+      return false;
+    }
+    data.stempels += 1;
+    data.vandaagStempels += 1;
+    bewaar();
+    tekenKaart(true);
+    tekenKraamcijfers();
+    document.getElementById("scan-status").textContent = "Stempel gezet (" + data.stempels + "/10).";
+    toast("Stempel " + data.stempels + " van 10");
+    if (data.stempels === 10) startFeest();
+    return true;
+  }
+
+  function wisselIn() {
+    if (data.stempels < 10) {
+      toast("Nog geen volle kaart. Er zijn " + data.stempels + " van 10 stempels.");
+      document.getElementById("scan-status").textContent = "Nog niet in te wisselen.";
+      return;
+    }
+    data.stempels = 0;
+    data.ingewisseld = (data.ingewisseld || 0) + 1;
+    bewaar();
+    tekenKaart(false);
+    tekenKraamcijfers();
+    document.getElementById("feest").classList.remove("aan");
+    document.getElementById("scan-status").textContent = "Gratis zak uitgereikt.";
+    toast("Gratis zak uitgereikt. De kaart is weer leeg.");
+  }
+
+  function navItems() {
+    if (data.kraam) {
+      return [
+        { id: "scan", label: "Scan", ico: "▣" },
+        { id: "nieuwe-actie", label: "Actie", ico: "✎" },
+        { id: "kaart", label: "Kaart", ico: "◉" }
+      ];
+    }
+    return [
+      { id: "kaart", label: "Spaarkaart", ico: "◉" },
+      { id: "acties", label: "Acties", ico: "★" },
+      { id: "info", label: "Kraam", ico: "⌂" }
+    ];
+  }
+
+  function tekenNav() {
+    const nav = document.querySelector("nav.tab");
+    const items = navItems();
+    nav.innerHTML = "";
+    items.forEach((it, i) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "nav-btn";
+      b.id = "nav-" + it.id;
+      b.dataset.naar = it.id;
+      b.innerHTML = "<span class='ico' aria-hidden='true'>" + it.ico + "</span>" + it.label;
+      if (it.id === scherm) b.setAttribute("aria-current", "page");
+      b.addEventListener("click", () => toon(it.id));
+      nav.appendChild(b);
+    });
+  }
+
+  function stopCamera() {
+    scanlus += 1;
+    if (stream) {
+      stream.getTracks().forEach(t => t.stop());
+      stream = null;
+    }
+    const v = document.getElementById("scanner-video");
+    v.srcObject = null;
+    v.style.display = "none";
+  }
+
+  function toon(naam) {
+    if (naam !== "scan") stopCamera();
+    scherm = naam;
+    document.querySelectorAll(".scherm").forEach(s => {
+      s.classList.toggle("aan", s.dataset.scherm === naam);
+    });
+    tekenNav();
+    if (naam === "acties") tekenActies();
+    if (naam === "kaart") tekenKaart(false);
+    if (naam === "scan") tekenKraamcijfers();
+  }
+
+  async function startCamera() {
+    const status = document.getElementById("scan-status");
+    const video = document.getElementById("scanner-video");
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      status.textContent = "Geen camera op dit toestel. Gebruik Demo-scan.";
+      return;
+    }
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: false });
+      video.srcObject = stream;
+      video.style.display = "block";
+      await video.play();
+      status.textContent = "Camera aan. Richt op de QR-code van de klant.";
+      const mijnLus = ++scanlus;
+      if ("BarcodeDetector" in window) {
+        const det = new BarcodeDetector({ formats: ["qr_code"] });
+        const tick = async () => {
+          if (mijnLus !== scanlus) return;
+          try {
+            const codes = await det.detect(video);
+            if (codes && codes.length) {
+              verwerkScan(codes[0].rawValue || "");
+              return;
+            }
+          } catch (e) {}
+          requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      } else {
+        status.textContent = "Dit toestel kan geen QR scannen. Gebruik Demo-scan.";
+      }
+    } catch (e) {
+      status.textContent = "Camera niet beschikbaar. Gebruik Demo-scan.";
+    }
+  }
+
+  function verwerkScan(waarde) {
+    const v = String(waarde || "");
+    if (v === "oliebol:" + data.klantId || v.indexOf("oliebol:") === 0) {
+      geefStempel();
+      stopCamera();
+    } else {
+      document.getElementById("scan-status").textContent = "Onbekende code.";
+    }
+  }
+
+  function vraagPin() {
+    document.getElementById("pin-modal").classList.add("aan");
+    document.getElementById("pin-fout").hidden = true;
+    const inp = document.getElementById("pin-input");
+    inp.value = "";
+    setTimeout(() => inp.focus(), 50);
+  }
+  function sluitPin(ok) {
+    document.getElementById("pin-modal").classList.remove("aan");
+    const tog = document.getElementById("toggle-kraam");
+    if (!ok) tog.checked = false;
+  }
+
+  function naarKraam(aan) {
+    data.kraam = !!aan;
+    bewaar();
+    document.getElementById("toggle-kraam").checked = data.kraam;
+    toon(data.kraam ? "scan" : "kaart");
+  }
+
+  document.getElementById("toggle-kraam").addEventListener("change", (e) => {
+    if (e.target.checked) {
+      if (data.kraam) { naarKraam(true); return; }
+      vraagPin();
+    } else {
+      naarKraam(false);
+    }
+  });
+  document.getElementById("pin-ok").addEventListener("click", () => {
+    const v = document.getElementById("pin-input").value.trim();
+    if (v === PIN) {
+      document.getElementById("pin-fout").hidden = true;
+      sluitPin(true);
+      naarKraam(true);
+    } else {
+      document.getElementById("pin-fout").hidden = false;
+    }
+  });
+  document.getElementById("pin-annuleren").addEventListener("click", () => sluitPin(false));
+  document.getElementById("pin-input").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") document.getElementById("pin-ok").click();
+  });
+  document.getElementById("feest-dicht").addEventListener("click", () => {
+    document.getElementById("feest").classList.remove("aan");
+  });
+  document.getElementById("btn-demo-scan").addEventListener("click", () => geefStempel());
+  document.getElementById("btn-inwisselen").addEventListener("click", wisselIn);
+  document.getElementById("btn-scan-start").addEventListener("click", startCamera);
+  document.getElementById("btn-actie-opslaan").addEventListener("click", () => {
+    const titel = document.getElementById("actie-titel").value.trim();
+    const tekst = document.getElementById("actie-tekst").value.trim();
+    const tot = document.getElementById("actie-tot").value;
+    const m = document.getElementById("kraam-melding");
+    if (!titel || !tekst || !tot) {
+      m.textContent = "Vul titel, tekst en een einddatum in.";
+      return;
+    }
+    data.acties.unshift({
+      id: "a-" + Date.now(),
+      titel, tekst, tot,
+      voorbeeld: false
+    });
+    bewaar();
+    document.getElementById("actie-titel").value = "";
+    document.getElementById("actie-tekst").value = "";
+    m.textContent = "Actie geplaatst. Je ziet hem bij de klant onder Acties.";
+    toast("Actie geplaatst");
+  });
+
+  document.getElementById("toggle-kraam").checked = !!data.kraam;
+  tekenQR();
+  tekenKaart(false);
+  tekenActies();
+  tekenKraamcijfers();
+  toon(data.kraam ? "scan" : "kaart");
+})();
+  </script>
+</body>
+</html>
